@@ -1,0 +1,827 @@
+{% extends 'base.html' %}
+
+{% block title %}عقاراتي الفاخرة - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Luxury Page Header -->
+<section class="luxury-page-header">
+    <div class="header-background"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="page-title-content" data-aos="fade-right">
+                    <h1 class="page-title">
+                        <i class="fas fa-building me-3"></i>
+                        عقاراتي الفاخرة
+                    </h1>
+                    <p class="page-subtitle">
+                        إدارة وتتبع جميع عقاراتك الفاخرة في مكان واحد
+                    </p>
+                    <div class="breadcrumb-luxury">
+                        <a href="{% url 'properties:home' %}">الرئيسية</a>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>عقاراتي الفاخرة</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="header-actions" data-aos="fade-left">
+                    <a href="{% url 'properties:add_property_request' %}" class="luxury-btn luxury-btn-primary">
+                        <i class="fas fa-plus me-2"></i>
+                        إضافة عقار فاخر
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Dashboard Stats -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-dashboard-card total" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="card-content">
+                    <h3>{{ total_properties }}</h3>
+                    <p>إجمالي العقارات</p>
+                </div>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-dashboard-card active" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>{{ active_properties }}</h3>
+                    <p>عقارات نشطة</p>
+                </div>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-dashboard-card pending" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>{{ pending_properties }}</h3>
+                    <p>في الانتظار</p>
+                </div>
+                <div class="card-trend">
+                    <i class="fas fa-minus"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-dashboard-card revenue" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="card-content">
+                    <h3>{{ total_revenue|floatformat:0 }}</h3>
+                    <p>إجمالي الإيرادات</p>
+                </div>
+                <div class="card-trend">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter and Search -->
+    <div class="properties-controls" data-aos="fade-up">
+        <div class="controls-header">
+            <h4>إدارة العقارات</h4>
+            <div class="controls-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="البحث في عقاراتي..." id="propertySearch">
+                </div>
+                <select class="luxury-form-control" id="statusFilter">
+                    <option value="">جميع الحالات</option>
+                    <option value="approved">نشط</option>
+                    <option value="pending">في الانتظار</option>
+                    <option value="rejected">مرفوض</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="properties-management-grid" data-aos="fade-up" data-aos-delay="200">
+        {% for property in properties %}
+            <div class="property-management-card luxury-card" data-status="{{ property.status }}">
+                <div class="property-image-section">
+                    {% if property.images.first %}
+                        <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="property-image">
+                    {% else %}
+                        <div class="property-placeholder">
+                            <i class="fas fa-image"></i>
+                            <span>لا توجد صورة</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="property-status-overlay">
+                        <span class="status-badge status-{{ property.status }}">
+                            {% if property.status == 'approved' %}
+                                <i class="fas fa-check me-1"></i>نشط
+                            {% elif property.status == 'pending' %}
+                                <i class="fas fa-clock me-1"></i>في المراجعة
+                            {% elif property.status == 'rejected' %}
+                                <i class="fas fa-times me-1"></i>مرفوض
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="property-quick-actions">
+                        {% if property.status == 'approved' %}
+                            <button class="action-btn view-btn" onclick="viewProperty({{ property.pk }})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        {% endif %}
+                        <button class="action-btn edit-btn" onclick="editProperty({{ property.pk }})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteProperty({{ property.pk }})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="property-info-section">
+                    <div class="property-header">
+                        <h5 class="property-title">{{ property.title }}</h5>
+                        <div class="property-price">{{ property.price|floatformat:0 }} ريال/شهر</div>
+                    </div>
+                    
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ property.city }}
+                    </div>
+                    
+                    <div class="property-features">
+                        <div class="feature-item">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span>{{ property.area }} م²</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bed"></i>
+                            <span>{{ property.bedrooms }} غرفة</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bath"></i>
+                            <span>{{ property.bathrooms }} حمام</span>
+                        </div>
+                    </div>
+                    
+                    <div class="property-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-eye me-1"></i>
+                            <span>125 مشاهدة</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart me-1"></i>
+                            <span>15 إعجاب</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-handshake me-1"></i>
+                            <span>3 طلبات</span>
+                        </div>
+                    </div>
+                    
+                    <div class="property-actions">
+                        {% if property.status == 'approved' %}
+                            <a href="{% url 'properties:property_detail' property.pk %}" 
+                               class="luxury-btn luxury-btn-primary luxury-btn-sm">
+                                <i class="fas fa-eye me-1"></i>
+                                عرض العقار
+                            </a>
+                            <button class="luxury-btn luxury-btn-outline luxury-btn-sm" 
+                                    onclick="viewRequests({{ property.pk }})">
+                                <i class="fas fa-list me-1"></i>
+                                الطلبات
+                            </button>
+                        {% elif property.status == 'pending' %}
+                            <button class="luxury-btn luxury-btn-outline luxury-btn-sm" 
+                                    onclick="editProperty({{ property.pk }})">
+                                <i class="fas fa-edit me-1"></i>
+                                تعديل
+                            </button>
+                            <button class="luxury-btn luxury-btn-outline luxury-btn-sm text-danger" 
+                                    onclick="cancelProperty({{ property.pk }})">
+                                <i class="fas fa-times me-1"></i>
+                                إلغاء
+                            </button>
+                        {% elif property.status == 'rejected' %}
+                            <button class="luxury-btn luxury-btn-primary luxury-btn-sm" 
+                                    onclick="resubmitProperty({{ property.pk }})">
+                                <i class="fas fa-redo me-1"></i>
+                                إعادة إرسال
+                            </button>
+                            <button class="luxury-btn luxury-btn-outline luxury-btn-sm" 
+                                    onclick="viewRejectionReason({{ property.pk }})">
+                                <i class="fas fa-info-circle me-1"></i>
+                                سبب الرفض
+                            </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="property-footer">
+                        <small class="text-muted">
+                            آخر تحديث: {{ property.updated_at|date:"d/m/Y H:i" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state-full">
+                <div class="empty-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h4>لا توجد عقارات بعد</h4>
+                <p>ابدأ بإضافة عقارك الأول لتظهر هنا</p>
+                <a href="{% url 'properties:add_property_request' %}" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                    <i class="fas fa-plus me-2"></i>
+                    إضافة عقار فاخر
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if properties.has_other_pages %}
+        <nav class="luxury-pagination" data-aos="fade-up">
+            <div class="pagination-info">
+                <span>صفحة {{ properties.number }} من {{ properties.paginator.num_pages }}</span>
+            </div>
+            <ul class="pagination-list">
+                {% if properties.has_previous %}
+                    <li>
+                        <a href="?page={{ properties.previous_page_number }}" class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                            السابق
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for num in properties.paginator.page_range %}
+                    {% if properties.number == num %}
+                        <li>
+                            <span class="pagination-btn active">{{ num }}</span>
+                        </li>
+                    {% elif num > properties.number|add:'-3' and num < properties.number|add:'3' %}
+                        <li>
+                            <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if properties.has_next %}
+                    <li>
+                        <a href="?page={{ properties.next_page_number }}" class="pagination-btn">
+                            التالي
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Dashboard Cards */
+.luxury-dashboard-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.luxury-dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--luxury-gold);
+}
+
+.luxury-dashboard-card.total::before {
+    background: linear-gradient(135deg, #D4AF37, #F4E4BC);
+}
+
+.luxury-dashboard-card.active::before {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.luxury-dashboard-card.pending::before {
+    background: linear-gradient(135deg, #FFA500, #FFB84D);
+}
+
+.luxury-dashboard-card.revenue::before {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+}
+
+.luxury-dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.card-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.total .card-icon {
+    background: var(--luxury-gradient-gold);
+}
+
+.active .card-icon {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.pending .card-icon {
+    background: linear-gradient(135deg, #FFA500, #FFB84D);
+}
+
+.revenue .card-icon {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--luxury-charcoal);
+    margin: 0;
+    font-family: var(--luxury-font-secondary);
+}
+
+.card-content p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.card-trend {
+    color: var(--luxury-emerald);
+    font-size: 1.2rem;
+}
+
+/* Properties Controls */
+.properties-controls {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+    margin-bottom: 3rem;
+}
+
+.controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.controls-header h4 {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-family: var(--luxury-font-secondary);
+    font-weight: 600;
+}
+
+.controls-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    min-width: 250px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--luxury-gold);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    border: 2px solid var(--luxury-light-gray);
+    border-radius: 25px;
+    background: var(--luxury-white);
+    transition: var(--luxury-transition);
+}
+
+.search-box input:focus {
+    border-color: var(--luxury-gold);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+/* Properties Management Grid */
+.properties-management-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.property-management-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.property-management-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.property-image-section {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--luxury-transition);
+}
+
+.property-management-card:hover .property-image {
+    transform: scale(1.05);
+}
+
+.property-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-light-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--luxury-gray);
+}
+
+.property-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.property-status-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.property-quick-actions {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: var(--luxury-transition);
+}
+
+.property-management-card:hover .property-quick-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: var(--luxury-transition);
+    backdrop-filter: blur(10px);
+}
+
+.view-btn {
+    background: rgba(80, 200, 120, 0.9);
+}
+
+.edit-btn {
+    background: rgba(212, 175, 55, 0.9);
+}
+
+.delete-btn {
+    background: rgba(139, 0, 0, 0.9);
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.property-info-section {
+    padding: 1.5rem;
+}
+
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.property-title {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+    font-size: 1.1rem;
+    flex: 1;
+}
+
+.property-price {
+    color: var(--luxury-gold);
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: var(--luxury-font-secondary);
+}
+
+.property-location {
+    color: var(--luxury-gray);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.property-features {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--luxury-light-gray);
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.feature-item i {
+    color: var(--luxury-gold);
+    margin-bottom: 0.5rem;
+}
+
+.property-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--luxury-gray);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+}
+
+.stat-item i {
+    color: var(--luxury-gold);
+}
+
+.property-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.property-footer {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--luxury-light-gray);
+}
+
+/* Empty State */
+.empty-state-full {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--luxury-white);
+    border-radius: 20px;
+    box-shadow: var(--luxury-shadow-light);
+}
+
+.empty-state-full .empty-icon i {
+    font-size: 5rem;
+    color: var(--luxury-gold);
+    margin-bottom: 2rem;
+}
+
+.empty-state-full h4 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-family: var(--luxury-font-secondary);
+}
+
+.empty-state-full p {
+    color: var(--luxury-gray);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .properties-management-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .controls-actions {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        min-width: auto;
+    }
+    
+    .property-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .property-features {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .feature-item {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .feature-item i {
+        margin-bottom: 0;
+        margin-left: 0.5rem;
+    }
+    
+    .property-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Search functionality
+document.getElementById('propertySearch').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const propertyCards = document.querySelectorAll('.property-management-card');
+    
+    propertyCards.forEach(card => {
+        const title = card.querySelector('.property-title').textContent.toLowerCase();
+        const location = card.querySelector('.property-location').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || location.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Status filter
+document.getElementById('statusFilter').addEventListener('change', function() {
+    const selectedStatus = this.value;
+    const propertyCards = document.querySelectorAll('.property-management-card');
+    
+    propertyCards.forEach(card => {
+        const cardStatus = card.dataset.status;
+        
+        if (!selectedStatus || cardStatus === selectedStatus) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Property management functions
+function viewProperty(propertyId) {
+    window.open(`/property/${propertyId}/`, '_blank');
+}
+
+function editProperty(propertyId) {
+    showLuxuryNotification('جاري تحميل صفحة التعديل...', 'info');
+    // Redirect to edit page
+    window.location.href = `/edit-property/${propertyId}/`;
+}
+
+function deleteProperty(propertyId) {
+    if (confirm('هل أنت متأكد من حذف هذا العقار؟ لا يمكن التراجع عن هذا الإجراء.')) {
+        showLuxuryNotification('جاري حذف العقار...', 'info');
+        
+        // This would typically make an AJAX request to delete the property
+        setTimeout(() => {
+            const propertyCard = event.target.closest('.property-management-card');
+            propertyCard.style.opacity = '0';
+            propertyCard.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                propertyCard.remove();
+                showLuxuryNotification('تم حذف العقار بنجاح', 'success');
+            }, 500);
+        }, 1000);
+    }
+}
+
+function viewRequests(propertyId) {
+    showLuxuryNotification('جاري تحميل طلبات العقار...', 'info');
+    // This would typically open a modal or navigate to requests page
+}
+
+function cancelProperty(propertyId) {
+    if (confirm('هل تريد إلغاء طلب عرض هذا العقار؟')) {
+        showLuxuryNotification('تم إلغاء الطلب بنجاح', 'success');
+        
+        const propertyCard = event.target.closest('.property-management-card');
+        const statusBadge = propertyCard.querySelector('.status-badge');
+        statusBadge.innerHTML = '<i class="fas fa-times me-1"></i>ملغي';
+        statusBadge.className = 'status-badge status-cancelled';
+    }
+}
+
+function resubmitProperty(propertyId) {
+    if (confirm('هل تريد إعادة إرسال طلب عرض هذا العقار؟')) {
+        showLuxuryNotification('تم إعادة إرسال الطلب بنجاح', 'success');
+        
+        const propertyCard = event.target.closest('.property-management-card');
+        const statusBadge = propertyCard.querySelector('.status-badge');
+        statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i>في المراجعة';
+        statusBadge.className = 'status-badge status-pending';
+    }
+}
+
+function viewRejectionReason(propertyId) {
+    // This would typically show a modal with the rejection reason
+    showLuxuryNotification('سبب الرفض: لم تستوف المعايير المطلوبة للعقارات الفاخرة', 'info');
+}
+
+// Auto-refresh data every 60 seconds
+setInterval(function() {
+    // This would typically make an AJAX request to refresh property data
+    console.log('Refreshing property data...');
+}, 60000);
+</script>
+{% endblock %}

@@ -14,57 +14,61 @@ class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'luxury-form-control',
             'placeholder': 'اسم المستخدم'
         })
         self.fields['email'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'luxury-form-control',
             'placeholder': 'البريد الإلكتروني'
         })
         self.fields['user_type'].widget.attrs.update({
-            'class': 'form-control'
+            'class': 'luxury-form-control'
         })
         self.fields['phone'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'luxury-form-control',
             'placeholder': 'رقم الهاتف'
         })
         self.fields['password1'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'luxury-form-control',
             'placeholder': 'كلمة المرور'
         })
         self.fields['password2'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'luxury-form-control',
             'placeholder': 'تأكيد كلمة المرور'
         })
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'profile_image']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone', 'address', 'profile_image']
         widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'luxury-form-control',
+                'placeholder': 'اسم المستخدم'
+            }),
             'first_name': forms.TextInput(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'placeholder': 'الاسم الأول'
             }),
             'last_name': forms.TextInput(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'placeholder': 'الاسم الأخير'
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'placeholder': 'البريد الإلكتروني'
             }),
             'phone': forms.TextInput(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'placeholder': 'رقم الهاتف'
             }),
             'address': forms.Textarea(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'rows': 3,
                 'placeholder': 'العنوان'
             }),
             'profile_image': forms.FileInput(attrs={
-                'class': 'form-control',
+                'class': 'luxury-form-control',
                 'accept': 'image/*'
             }),
         }

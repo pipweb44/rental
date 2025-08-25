@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}العقارات الفاخرة - أرقى العقارات في المملكة{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts - Luxury Arabic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    {% load static %}
+    <link href="{% static 'css/luxury.css' %}" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="luxury-body">
+    <!-- Luxury Loader -->
+    <div id="luxury-loader" class="luxury-loader">
+        <div class="loader-content">
+            <div class="luxury-logo">
+                <i class="fas fa-crown"></i>
+                <h3>العقارات الفاخرة</h3>
+            </div>
+            <div class="luxury-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Luxury Navigation -->
+    <nav class="navbar navbar-expand-lg luxury-navbar fixed-top">
+        <div class="container">
+            <a class="navbar-brand luxury-brand" href="{% url 'properties:home' %}">
+                <i class="fas fa-crown me-2"></i>
+                <span class="brand-text">العقارات الفاخرة</span>
+                <span class="brand-subtitle">LUXURY ESTATES</span>
+            </a>
+            
+            <button class="navbar-toggler luxury-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto luxury-nav">
+                    <li class="nav-item">
+                        <a class="nav-link luxury-nav-link" href="{% url 'properties:home' %}">
+                            <i class="fas fa-home"></i>
+                            الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link luxury-nav-link" href="{% url 'properties:property_list' %}">
+                            <i class="fas fa-building"></i>
+                            العقارات الفاخرة
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link luxury-nav-link" href="{% url 'properties:my_requests' %}">
+                                <i class="fas fa-clipboard-list"></i>
+                                طلباتي
+                            </a>
+                        </li>
+                        {% if user.user_type == 'owner' %}
+                            <li class="nav-item">
+                                <a class="nav-link luxury-nav-link" href="{% url 'properties:my_properties' %}">
+                                    <i class="fas fa-key"></i>
+                                    عقاراتي
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link luxury-nav-link" href="{% url 'properties:add_property_request' %}">
+                                    <i class="fas fa-plus-circle"></i>
+                                    عرض عقار فاخر
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link luxury-nav-link" href="{% url 'admin_panel:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    لوحة الإدارة
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav luxury-nav-right">
+                    <li class="nav-item">
+                        <button class="luxury-theme-toggle" onclick="toggleLuxuryTheme()">
+                            <i class="fas fa-moon" id="theme-icon"></i>
+                        </button>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle luxury-user-menu" href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="user-avatar">
+                                    {% if user.profile_image %}
+                                        <img src="{{ user.profile_image.url }}" alt="Profile">
+                                    {% else %}
+                                        <i class="fas fa-user-circle"></i>
+                                    {% endif %}
+                                </div>
+                                <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu luxury-dropdown">
+                                <li><a class="dropdown-item" href="{% url 'users:profile' %}">
+                                    <i class="fas fa-user me-2"></i>الملف الشخصي
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'users:logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="luxury-btn luxury-btn-outline" href="{% url 'users:login' %}">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                تسجيل الدخول
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="luxury-btn luxury-btn-primary" href="{% url 'users:register' %}">
+                                <i class="fas fa-user-plus me-2"></i>
+                                انضم إلينا
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Luxury Messages -->
+    {% if messages %}
+        <div class="luxury-messages">
+            {% for message in messages %}
+                <div class="luxury-alert luxury-alert-{{ message.tags }}" data-aos="fade-down">
+                    <div class="alert-content">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ message }}</span>
+                        <button type="button" class="luxury-close" onclick="this.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="luxury-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Luxury Footer -->
+    <footer class="luxury-footer">
+        <div class="footer-overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="footer-brand">
+                        <i class="fas fa-crown"></i>
+                        <h4>العقارات الفاخرة</h4>
+                        <p class="footer-subtitle">LUXURY ESTATES</p>
+                        <p class="footer-description">
+                            نحن نقدم أرقى وأفخم العقارات في المملكة العربية السعودية، 
+                            مع خدمة عملاء استثنائية وتجربة فاخرة لا تُنسى.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="footer-title">الخدمات</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'properties:property_list' %}">العقارات الفاخرة</a></li>
+                        <li><a href="#">الاستشارات العقارية</a></li>
+                        <li><a href="#">إدارة العقارات</a></li>
+                        <li><a href="#">التقييم العقاري</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <h5 class="footer-title">روابط سريعة</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="#">الشروط والأحكام</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <h5 class="footer-title">تواصل معنا</h5>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>الرياض، حي الملك فهد، برج العقارات الفاخرة</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+966 11 123 4567</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@luxuryestates.sa</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">
+                            &copy; 2024 العقارات الفاخرة. جميع الحقوق محفوظة.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p class="powered-by">
+                            صُنع بـ <i class="fas fa-heart text-gold"></i> في المملكة العربية السعودية
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top -->
+    <button class="luxury-scroll-top" id="scrollTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{% static 'js/luxury.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

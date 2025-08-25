@@ -1,0 +1,747 @@
+{% extends 'base.html' %}
+
+{% block title %}طلباتي - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Luxury Page Header -->
+<section class="luxury-page-header">
+    <div class="header-background"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="page-title-content" data-aos="fade-right">
+                    <h1 class="page-title">
+                        <i class="fas fa-clipboard-list me-3"></i>
+                        طلباتي
+                    </h1>
+                    <p class="page-subtitle">
+                        تابع جميع طلباتك وحالتها في مكان واحد
+                    </p>
+                    <div class="breadcrumb-luxury">
+                        <a href="{% url 'properties:home' %}">الرئيسية</a>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>طلباتي</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="header-stats" data-aos="fade-left">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ total_requests }}</div>
+                        <div class="stat-label">إجمالي الطلبات</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-stat-card pending" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ pending_count }}</h3>
+                    <p>في الانتظار</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-stat-card approved" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ approved_count }}</h3>
+                    <p>مقبولة</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-stat-card rejected" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ rejected_count }}</h3>
+                    <p>مرفوضة</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="luxury-stat-card total" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ total_requests }}</h3>
+                    <p>إجمالي الطلبات</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="luxury-tabs-container" data-aos="fade-up">
+        <ul class="luxury-tabs" role="tablist">
+            <li class="tab-item">
+                <button class="tab-link active" data-tab="all">
+                    <i class="fas fa-list me-2"></i>
+                    جميع الطلبات
+                    <span class="tab-badge">{{ total_requests }}</span>
+                </button>
+            </li>
+            {% if user.user_type == 'client' %}
+                <li class="tab-item">
+                    <button class="tab-link" data-tab="rental">
+                        <i class="fas fa-handshake me-2"></i>
+                        طلبات الإيجار
+                        <span class="tab-badge">{{ rental_requests.count }}</span>
+                    </button>
+                </li>
+            {% endif %}
+            {% if user.user_type == 'owner' %}
+                <li class="tab-item">
+                    <button class="tab-link" data-tab="property">
+                        <i class="fas fa-building me-2"></i>
+                        طلبات العرض
+                        <span class="tab-badge">{{ property_requests.count }}</span>
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Requests Content -->
+    <div class="requests-content">
+        <!-- All Requests Tab -->
+        <div class="tab-content active" id="all">
+            {% if user.user_type == 'client' and rental_requests %}
+                <div class="requests-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-handshake me-2"></i>
+                        طلبات الإيجار
+                    </h4>
+                    <div class="requests-grid">
+                        {% for request in rental_requests %}
+                            <div class="request-card luxury-card" data-aos="fade-up">
+                                <div class="request-header">
+                                    <div class="request-info">
+                                        <h5>{{ request.property.title }}</h5>
+                                        <p class="request-location">
+                                            <i class="fas fa-map-marker-alt me-2"></i>
+                                            {{ request.property.city }}
+                                        </p>
+                                    </div>
+                                    <div class="request-status">
+                                        <span class="status-badge status-{{ request.status }}">
+                                            {% if request.status == 'pending' %}
+                                                <i class="fas fa-clock me-1"></i>في الانتظار
+                                            {% elif request.status == 'approved' %}
+                                                <i class="fas fa-check me-1"></i>مقبول
+                                            {% elif request.status == 'rejected' %}
+                                                <i class="fas fa-times me-1"></i>مرفوض
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="request-body">
+                                    <div class="request-details">
+                                        <div class="detail-item">
+                                            <i class="fas fa-calendar me-2"></i>
+                                            <span>تاريخ البداية: {{ request.preferred_start_date|date:"d/m/Y" }}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-clock me-2"></i>
+                                            <span>المدة: {{ request.duration_months }} شهر</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-coins me-2"></i>
+                                            <span>السعر: {{ request.property.price }} ريال/شهر</span>
+                                        </div>
+                                    </div>
+                                    
+                                    {% if request.message %}
+                                        <div class="request-message">
+                                            <h6>رسالتك:</h6>
+                                            <p>{{ request.message|truncatewords:20 }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="request-footer">
+                                    <div class="request-date">
+                                        <small>تم الإرسال في {{ request.created_at|date:"d/m/Y H:i" }}</small>
+                                    </div>
+                                    <div class="request-actions">
+                                        <a href="{% url 'properties:property_detail' request.property.pk %}" 
+                                           class="luxury-btn luxury-btn-outline luxury-btn-sm">
+                                            <i class="fas fa-eye me-1"></i>
+                                            عرض العقار
+                                        </a>
+                                        {% if request.status == 'pending' %}
+                                            <button class="luxury-btn luxury-btn-outline luxury-btn-sm text-danger" 
+                                                    onclick="cancelRequest({{ request.pk }}, 'rental')">
+                                                <i class="fas fa-times me-1"></i>
+                                                إلغاء
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user.user_type == 'owner' and property_requests %}
+                <div class="requests-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-building me-2"></i>
+                        طلبات عرض العقارات
+                    </h4>
+                    <div class="requests-grid">
+                        {% for request in property_requests %}
+                            <div class="request-card luxury-card" data-aos="fade-up">
+                                <div class="request-header">
+                                    <div class="request-info">
+                                        <h5>{{ request.title }}</h5>
+                                        <p class="request-location">
+                                            <i class="fas fa-map-marker-alt me-2"></i>
+                                            {{ request.city }}
+                                        </p>
+                                    </div>
+                                    <div class="request-status">
+                                        <span class="status-badge status-{{ request.status }}">
+                                            {% if request.status == 'pending' %}
+                                                <i class="fas fa-clock me-1"></i>في المراجعة
+                                            {% elif request.status == 'approved' %}
+                                                <i class="fas fa-check me-1"></i>معتمد
+                                            {% elif request.status == 'rejected' %}
+                                                <i class="fas fa-times me-1"></i>مرفوض
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="request-body">
+                                    <div class="request-details">
+                                        <div class="detail-item">
+                                            <i class="fas fa-home me-2"></i>
+                                            <span>النوع: {{ request.get_property_type_display }}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-expand-arrows-alt me-2"></i>
+                                            <span>المساحة: {{ request.area }} م²</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-coins me-2"></i>
+                                            <span>السعر: {{ request.price }} ريال/شهر</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="request-description">
+                                        <p>{{ request.description|truncatewords:15 }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="request-footer">
+                                    <div class="request-date">
+                                        <small>تم الإرسال في {{ request.created_at|date:"d/m/Y H:i" }}</small>
+                                    </div>
+                                    <div class="request-actions">
+                                        {% if request.status == 'approved' %}
+                                            <a href="{% url 'properties:property_detail' request.property.pk %}" 
+                                               class="luxury-btn luxury-btn-primary luxury-btn-sm">
+                                                <i class="fas fa-eye me-1"></i>
+                                                عرض العقار
+                                            </a>
+                                        {% endif %}
+                                        <button class="luxury-btn luxury-btn-outline luxury-btn-sm" 
+                                                onclick="viewRequestDetails({{ request.pk }}, 'property')">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            التفاصيل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not rental_requests and not property_requests %}
+                <div class="empty-state" data-aos="fade-up">
+                    <div class="empty-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h4>لا توجد طلبات بعد</h4>
+                    <p>لم تقم بإرسال أي طلبات حتى الآن</p>
+                    <div class="empty-actions">
+                        {% if user.user_type == 'client' %}
+                            <a href="{% url 'properties:property_list' %}" class="luxury-btn luxury-btn-primary">
+                                <i class="fas fa-search me-2"></i>
+                                ابحث عن عقار
+                            </a>
+                        {% elif user.user_type == 'owner' %}
+                            <a href="{% url 'properties:add_property_request' %}" class="luxury-btn luxury-btn-primary">
+                                <i class="fas fa-plus me-2"></i>
+                                أضف عقارك
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Luxury Stat Cards */
+.luxury-stat-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-left: 4px solid var(--luxury-gold);
+    height: 100%;
+}
+
+.luxury-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.luxury-stat-card.pending {
+    border-left-color: #FFA500;
+}
+
+.luxury-stat-card.approved {
+    border-left-color: var(--luxury-emerald);
+}
+
+.luxury-stat-card.rejected {
+    border-left-color: var(--luxury-burgundy);
+}
+
+.luxury-stat-card.total {
+    border-left-color: var(--luxury-gold);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.pending .stat-icon {
+    background: linear-gradient(135deg, #FFA500, #FFB84D);
+}
+
+.approved .stat-icon {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.rejected .stat-icon {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+}
+
+.total .stat-icon {
+    background: var(--luxury-gradient-gold);
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--luxury-charcoal);
+    margin: 0;
+    font-family: var(--luxury-font-secondary);
+}
+
+.stat-content p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-weight: 600;
+}
+
+/* Luxury Tabs */
+.luxury-tabs-container {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    box-shadow: var(--luxury-shadow-light);
+    padding: 1rem;
+    margin-bottom: 3rem;
+}
+
+.luxury-tabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tab-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.tab-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: 2px solid var(--luxury-light-gray);
+    border-radius: 15px;
+    color: var(--luxury-gray);
+    text-decoration: none;
+    transition: var(--luxury-transition);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.tab-link:hover {
+    border-color: var(--luxury-gold);
+    color: var(--luxury-gold);
+    transform: translateY(-2px);
+}
+
+.tab-link.active {
+    background: var(--luxury-gradient-gold);
+    border-color: var(--luxury-gold);
+    color: white;
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.tab-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.tab-link.active .tab-badge {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Requests Content */
+.requests-content {
+    margin-top: 2rem;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.requests-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-family: var(--luxury-font-secondary);
+    font-size: 1.5rem;
+    color: var(--luxury-charcoal);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--luxury-gold);
+    font-weight: 600;
+}
+
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+/* Request Cards */
+.request-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    box-shadow: var(--luxury-shadow-light);
+    overflow: hidden;
+    transition: var(--luxury-transition);
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.request-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem 1.5rem 1rem;
+}
+
+.request-info h5 {
+    margin: 0 0 0.5rem 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.request-location {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background: rgba(255, 165, 0, 0.1);
+    color: #FFA500;
+    border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.status-approved {
+    background: rgba(80, 200, 120, 0.1);
+    color: var(--luxury-emerald);
+    border: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.status-rejected {
+    background: rgba(139, 0, 0, 0.1);
+    color: var(--luxury-burgundy);
+    border: 1px solid rgba(139, 0, 0, 0.3);
+}
+
+.request-body {
+    padding: 0 1.5rem 1rem;
+}
+
+.request-details {
+    margin-bottom: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.detail-item i {
+    color: var(--luxury-gold);
+    width: 20px;
+}
+
+.request-message {
+    background: var(--luxury-pearl);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.request-message h6 {
+    margin: 0 0 0.5rem 0;
+    color: var(--luxury-charcoal);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.request-message p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.request-description p {
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.request-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--luxury-pearl);
+    border-top: 1px solid var(--luxury-light-gray);
+}
+
+.request-date small {
+    color: var(--luxury-gray);
+    font-size: 0.8rem;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.luxury-btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--luxury-white);
+    border-radius: 20px;
+    box-shadow: var(--luxury-shadow-light);
+}
+
+.empty-icon i {
+    font-size: 5rem;
+    color: var(--luxury-gold);
+    margin-bottom: 2rem;
+}
+
+.empty-state h4 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-family: var(--luxury-font-secondary);
+}
+
+.empty-state p {
+    color: var(--luxury-gray);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .requests-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .luxury-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-item {
+        min-width: auto;
+    }
+    
+    .request-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .request-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .request-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .empty-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Tab functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const targetTab = this.dataset.tab;
+            
+            // Remove active class from all tabs and contents
+            tabLinks.forEach(l => l.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Show corresponding content
+            const targetContent = document.getElementById(targetTab);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+});
+
+// Cancel request function
+function cancelRequest(requestId, type) {
+    if (confirm('هل أنت متأكد من إلغاء هذا الطلب؟')) {
+        // This would typically make an AJAX request to cancel the request
+        showLuxuryNotification('تم إلغاء الطلب بنجاح', 'success');
+        
+        // Remove the request card from the UI
+        const requestCard = event.target.closest('.request-card');
+        requestCard.style.opacity = '0';
+        requestCard.style.transform = 'translateX(-100%)';
+        
+        setTimeout(() => {
+            requestCard.remove();
+        }, 500);
+    }
+}
+
+// View request details function
+function viewRequestDetails(requestId, type) {
+    // This would typically open a modal or navigate to a details page
+    showLuxuryNotification('جاري تحميل تفاصيل الطلب...', 'info');
+}
+
+// Auto-refresh requests every 30 seconds
+setInterval(function() {
+    // This would typically make an AJAX request to check for updates
+    console.log('Checking for request updates...');
+}, 30000);
+</script>
+{% endblock %}

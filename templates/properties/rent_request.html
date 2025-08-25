@@ -1,0 +1,929 @@
+{% extends 'base.html' %}
+
+{% block title %}طلب إيجار {{ property.title }} - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Property Preview Header -->
+<section class="property-preview-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="property-preview-info" data-aos="fade-right">
+                    <h2 class="property-title">{{ property.title }}</h2>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ property.address }}, {{ property.city }}
+                    </div>
+                    <div class="property-price">
+                        <span class="price-amount">{{ property.price|floatformat:0 }}</span>
+                        <span class="price-period">ريال/شهر</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="property-preview-image" data-aos="fade-left">
+                    {% if property.images.first %}
+                        <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="preview-img">
+                    {% else %}
+                        <div class="preview-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Rental Request Form -->
+            <div class="luxury-rental-form-card" data-aos="fade-up">
+                <div class="form-header">
+                    <div class="header-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>طلب إيجار فاخر</h3>
+                    <p>املأ النموذج أدناه لإرسال طلب إيجار هذا العقار الفاخر</p>
+                </div>
+
+                <form method="post" class="luxury-rental-form">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-user me-2"></i>
+                                معلوماتك الشخصية
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-user me-2"></i>
+                                        الاسم الكامل *
+                                    </label>
+                                    <input type="text" class="luxury-form-control" 
+                                           value="{{ user.get_full_name|default:user.username }}" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-envelope me-2"></i>
+                                        البريد الإلكتروني *
+                                    </label>
+                                    <input type="email" class="luxury-form-control" 
+                                           value="{{ user.email }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-phone me-2"></i>
+                                        رقم الهاتف *
+                                    </label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.phone.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-id-card me-2"></i>
+                                        رقم الهوية/الإقامة *
+                                    </label>
+                                    {{ form.national_id }}
+                                    {% if form.national_id.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.national_id.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rental Details Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                تفاصيل الإيجار
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        تاريخ البداية المفضل *
+                                    </label>
+                                    {{ form.preferred_start_date }}
+                                    {% if form.preferred_start_date.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.preferred_start_date.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-clock me-2"></i>
+                                        مدة الإيجار (بالأشهر) *
+                                    </label>
+                                    {{ form.duration_months }}
+                                    {% if form.duration_months.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.duration_months.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-comment me-2"></i>
+                                رسالة إضافية (اختيارية)
+                            </label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                                <div class="error-message">
+                                    {% for error in form.message.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                <small>أضف أي معلومات إضافية تريد أن يعرفها المالك</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-coins me-2"></i>
+                                المعلومات المالية
+                            </h4>
+                        </div>
+                        
+                        <div class="rental-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">الإيجار الشهري:</span>
+                                <span class="summary-value">{{ property.price|floatformat:0 }} ريال</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">مدة الإيجار:</span>
+                                <span class="summary-value" id="durationDisplay">-- شهر</span>
+                            </div>
+                            <div class="summary-item total">
+                                <span class="summary-label">إجمالي المبلغ:</span>
+                                <span class="summary-value" id="totalAmount">-- ريال</span>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-note">
+                            <div class="note-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="note-content">
+                                <h6>ملاحظة مهمة</h6>
+                                <p>سيتم التواصل معك لتحديد طريقة الدفع وتفاصيل العقد بعد موافقة المالك على طلبك</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="form-section">
+                        <div class="terms-section">
+                            <div class="terms-header">
+                                <h5>الشروط والأحكام</h5>
+                            </div>
+                            <div class="terms-content">
+                                <ul class="terms-list">
+                                    <li>أتعهد بصحة جميع المعلومات المقدمة</li>
+                                    <li>أوافق على شروط وأحكام الموقع</li>
+                                    <li>أتفهم أن هذا طلب أولي وليس عقد إيجار نهائي</li>
+                                    <li>سيتم التواصل معي خلال 48 ساعة من إرسال الطلب</li>
+                                </ul>
+                            </div>
+                            
+                            <label class="terms-checkbox">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span class="checkmark"></span>
+                                <span class="terms-text">
+                                    أوافق على جميع الشروط والأحكام المذكورة أعلاه
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="submit" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            إرسال طلب الإيجار الفاخر
+                        </button>
+                        <a href="{% url 'properties:property_detail' property.pk %}" 
+                           class="luxury-btn luxury-btn-outline luxury-btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            العودة للعقار
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Property Summary Card -->
+            <div class="property-summary-card luxury-card sticky-top" data-aos="fade-left" style="top: 120px;">
+                <div class="summary-header">
+                    <h5>ملخص العقار</h5>
+                </div>
+                <div class="summary-body">
+                    <div class="property-image-small">
+                        {% if property.images.first %}
+                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                        {% else %}
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h6>{{ property.title }}</h6>
+                    <p class="property-location-small">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ property.city }}
+                    </p>
+                    
+                    <div class="property-features-small">
+                        <div class="feature">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span>{{ property.area }} م²</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>{{ property.bedrooms }} غرفة</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>{{ property.bathrooms }} حمام</span>
+                        </div>
+                    </div>
+                    
+                    <div class="price-highlight">
+                        <span class="price">{{ property.price|floatformat:0 }} ريال/شهر</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info Card -->
+            <div class="contact-info-card luxury-card mt-4" data-aos="fade-left" data-aos-delay="200">
+                <div class="contact-header">
+                    <h6>معلومات المالك</h6>
+                </div>
+                <div class="contact-body">
+                    <div class="owner-info">
+                        <div class="owner-avatar">
+                            {% if property.owner.profile_image %}
+                                <img src="{{ property.owner.profile_image.url }}" alt="صورة المالك">
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                        </div>
+                        <div class="owner-details">
+                            <h6>{{ property.owner.get_full_name|default:property.owner.username }}</h6>
+                            <p>مالك عقارات فاخرة</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-note">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span>سيتم إرسال طلبك مباشرة للمالك</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Property Preview Header */
+.property-preview-header {
+    background: var(--luxury-gradient-dark);
+    color: white;
+    padding: 6rem 0 4rem;
+    margin-top: -100px;
+    padding-top: 8rem;
+}
+
+.property-preview-info .property-title {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--luxury-gold);
+}
+
+.property-preview-info .property-location {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.property-preview-info .property-price {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--luxury-font-secondary);
+}
+
+.price-amount {
+    color: var(--luxury-gold);
+}
+
+.price-period {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-right: 0.5rem;
+}
+
+.property-preview-image {
+    text-align: center;
+}
+
+.preview-img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid var(--luxury-gold);
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.preview-placeholder {
+    width: 200px;
+    height: 150px;
+    background: var(--luxury-light-gray);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--luxury-gray);
+    font-size: 2rem;
+    margin: 0 auto;
+}
+
+/* Luxury Rental Form Card */
+.luxury-rental-form-card {
+    background: var(--luxury-white);
+    border-radius: 25px;
+    box-shadow: var(--luxury-shadow-heavy);
+    overflow: hidden;
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.form-header {
+    background: linear-gradient(135deg, var(--luxury-pearl) 0%, var(--luxury-white) 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2rem;
+    color: white;
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.form-header h3 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    color: var(--luxury-gray);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Rental Summary */
+.rental-summary {
+    background: var(--luxury-pearl);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item.total {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--luxury-gold);
+    border-top: 2px solid var(--luxury-gold);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.summary-label {
+    color: var(--luxury-charcoal);
+}
+
+.summary-value {
+    color: var(--luxury-gold);
+    font-weight: 600;
+    font-family: var(--luxury-font-secondary);
+}
+
+/* Payment Note */
+.payment-note {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--luxury-gold-light);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.note-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--luxury-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.note-content h6 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.note-content p {
+    color: var(--luxury-gray);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Terms Section */
+.terms-section {
+    background: var(--luxury-pearl);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.terms-header h5 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.terms-list {
+    list-style: none;
+    margin: 0 0 2rem 0;
+    padding: 0;
+}
+
+.terms-list li {
+    position: relative;
+    padding-right: 2rem;
+    margin-bottom: 1rem;
+    color: var(--luxury-gray);
+    line-height: 1.6;
+}
+
+.terms-list li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    color: var(--luxury-gold);
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.terms-checkbox input {
+    display: none;
+}
+
+.terms-checkbox .checkmark {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--luxury-gold);
+    border-radius: 6px;
+    position: relative;
+    transition: var(--luxury-transition);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.terms-checkbox input:checked + .checkmark {
+    background: var(--luxury-gold);
+}
+
+.terms-checkbox input:checked + .checkmark::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.8rem;
+}
+
+.terms-text {
+    line-height: 1.6;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+/* Property Summary Card */
+.property-summary-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.summary-header {
+    background: var(--luxury-gradient-gold);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.summary-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.summary-body {
+    padding: 2rem;
+}
+
+.property-image-small {
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.property-image-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--luxury-gray);
+    font-size: 2rem;
+}
+
+.summary-body h6 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.property-location-small {
+    color: var(--luxury-gray);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.property-features-small {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--luxury-light-gray);
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.feature i {
+    color: var(--luxury-gold);
+    margin-bottom: 0.5rem;
+}
+
+.price-highlight {
+    text-align: center;
+    background: var(--luxury-pearl);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.price-highlight .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--luxury-gold);
+    font-family: var(--luxury-font-secondary);
+}
+
+/* Contact Info Card */
+.contact-info-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.contact-header {
+    background: var(--luxury-pearl);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.contact-header h6 {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.contact-body {
+    padding: 1.5rem;
+}
+
+.owner-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.owner-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--luxury-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--luxury-gold);
+}
+
+.owner-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.owner-avatar i {
+    color: var(--luxury-gray);
+    font-size: 1.2rem;
+}
+
+.owner-details h6 {
+    margin: 0 0 0.25rem 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.owner-details p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.contact-note {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.contact-note i {
+    color: var(--luxury-gold);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .property-preview-header {
+        padding: 4rem 0 2rem;
+        padding-top: 6rem;
+    }
+    
+    .property-preview-info .property-title {
+        font-size: 2rem;
+    }
+    
+    .property-preview-info .property-price {
+        font-size: 1.5rem;
+    }
+    
+    .form-header {
+        padding: 2rem 1.5rem;
+    }
+    
+    .form-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .property-features-small {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .feature {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .feature i {
+        margin-bottom: 0;
+        margin-left: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const durationInput = document.getElementById('id_duration_months');
+    const propertyPrice = {{ property.price }};
+    
+    // Update rental summary when duration changes
+    function updateRentalSummary() {
+        const duration = parseInt(durationInput.value) || 0;
+        const total = duration * propertyPrice;
+        
+        document.getElementById('durationDisplay').textContent = duration + ' شهر';
+        document.getElementById('totalAmount').textContent = total.toLocaleString() + ' ريال';
+    }
+    
+    // Initial calculation
+    updateRentalSummary();
+    
+    // Update on input change
+    durationInput.addEventListener('input', updateRentalSummary);
+    
+    // Form validation
+    const form = document.querySelector('.luxury-rental-form');
+    form.addEventListener('submit', function(e) {
+        const termsCheckbox = document.getElementById('agreeTerms');
+        
+        if (!termsCheckbox.checked) {
+            e.preventDefault();
+            showLuxuryNotification('يرجى الموافقة على الشروط والأحكام', 'error');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري الإرسال...';
+        submitBtn.disabled = true;
+        
+        // Show success message after a delay
+        setTimeout(() => {
+            showLuxuryNotification('تم إرسال طلب الإيجار بنجاح!', 'success');
+        }, 1000);
+    });
+    
+    // Phone number formatting
+    const phoneInput = document.getElementById('id_phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.startsWith('966')) {
+                    value = '+' + value;
+                } else if (value.startsWith('05')) {
+                    value = '+966' + value.substring(1);
+                } else if (value.startsWith('5')) {
+                    value = '+9665' + value.substring(1);
+                }
+            }
+            this.value = value;
+        });
+    }
+    
+    // National ID validation
+    const nationalIdInput = document.getElementById('id_national_id');
+    if (nationalIdInput) {
+        nationalIdInput.addEventListener('input', function() {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+            
+            // Limit to 10 digits for Saudi ID
+            if (this.value.length > 10) {
+                this.value = this.value.substring(0, 10);
+            }
+        });
+        
+        nationalIdInput.addEventListener('blur', function() {
+            if (this.value.length > 0 && this.value.length !== 10) {
+                this.style.borderColor = 'var(--luxury-burgundy)';
+                showLuxuryNotification('رقم الهوية يجب أن يكون 10 أرقام', 'error');
+            } else {
+                this.style.borderColor = 'var(--luxury-light-gray)';
+            }
+        });
+    }
+    
+    // Date validation
+    const startDateInput = document.getElementById('id_preferred_start_date');
+    if (startDateInput) {
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.setAttribute('min', today);
+        
+        startDateInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            
+            if (selectedDate < today) {
+                this.style.borderColor = 'var(--luxury-burgundy)';
+                showLuxuryNotification('لا يمكن اختيار تاريخ في الماضي', 'error');
+            } else {
+                this.style.borderColor = 'var(--luxury-light-gray)';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

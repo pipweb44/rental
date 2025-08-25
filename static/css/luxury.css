@@ -1,0 +1,933 @@
+/* Luxury Real Estate Website Styles */
+
+/* Root Variables - Luxury Color Palette */
+:root {
+    /* Gold & Luxury Colors */
+    --luxury-gold: #D4AF37;
+    --luxury-gold-light: #F4E4BC;
+    --luxury-gold-dark: #B8941F;
+    
+    /* Dark & Elegant Colors */
+    --luxury-black: #1A1A1A;
+    --luxury-charcoal: #2C2C2C;
+    --luxury-dark-gray: #3A3A3A;
+    --luxury-gray: #6B6B6B;
+    --luxury-light-gray: #E8E8E8;
+    
+    /* White & Cream */
+    --luxury-white: #FFFFFF;
+    --luxury-cream: #FAF8F3;
+    --luxury-pearl: #F8F6F0;
+    
+    /* Accent Colors */
+    --luxury-burgundy: #8B0000;
+    --luxury-navy: #1B2951;
+    --luxury-emerald: #50C878;
+    
+    /* Gradients */
+    --luxury-gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 100%);
+    --luxury-gradient-dark: linear-gradient(135deg, #1A1A1A 0%, #2C2C2C 100%);
+    --luxury-gradient-overlay: linear-gradient(rgba(26, 26, 26, 0.7), rgba(26, 26, 26, 0.7));
+    
+    /* Shadows */
+    --luxury-shadow-light: 0 4px 20px rgba(212, 175, 55, 0.1);
+    --luxury-shadow-medium: 0 8px 30px rgba(212, 175, 55, 0.2);
+    --luxury-shadow-heavy: 0 15px 50px rgba(26, 26, 26, 0.3);
+    --luxury-shadow-gold: 0 0 30px rgba(212, 175, 55, 0.3);
+    
+    /* Typography */
+    --luxury-font-primary: 'Tajawal', sans-serif;
+    --luxury-font-secondary: 'Amiri', serif;
+    
+    /* Transitions */
+    --luxury-transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --luxury-transition-fast: all 0.2s ease;
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --luxury-white: #1A1A1A;
+    --luxury-cream: #2C2C2C;
+    --luxury-pearl: #3A3A3A;
+    --luxury-light-gray: #4A4A4A;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--luxury-font-primary);
+    background: var(--luxury-cream);
+    color: var(--luxury-charcoal);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.luxury-body {
+    background: linear-gradient(135deg, var(--luxury-cream) 0%, var(--luxury-pearl) 100%);
+}
+
+/* Luxury Loader */
+.luxury-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-gradient-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.luxury-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    text-align: center;
+    color: var(--luxury-gold);
+}
+
+.luxury-logo i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: luxuryPulse 2s infinite;
+}
+
+.luxury-logo h3 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.luxury-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 2rem auto;
+}
+
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--luxury-gold);
+    border-radius: 50%;
+    animation: luxurySpin 1.5s linear infinite;
+}
+
+.spinner-ring:nth-child(2) {
+    width: 60px;
+    height: 60px;
+    top: 10px;
+    left: 10px;
+    animation-delay: -0.5s;
+}
+
+.spinner-ring:nth-child(3) {
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    left: 20px;
+    animation-delay: -1s;
+}
+
+/* Luxury Navigation */
+.luxury-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--luxury-gold-light);
+    padding: 1rem 0;
+    transition: var(--luxury-transition);
+    box-shadow: var(--luxury-shadow-light);
+}
+
+.luxury-navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    padding: 0.5rem 0;
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.luxury-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--luxury-charcoal);
+    transition: var(--luxury-transition);
+}
+
+.luxury-brand:hover {
+    color: var(--luxury-gold);
+    transform: scale(1.05);
+}
+
+.luxury-brand i {
+    font-size: 2rem;
+    color: var(--luxury-gold);
+    margin-left: 0.5rem;
+}
+
+.brand-text {
+    font-family: var(--luxury-font-secondary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.brand-subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    display: block;
+    margin-top: -0.2rem;
+}
+
+.luxury-nav .nav-link {
+    color: var(--luxury-charcoal);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    margin: 0 0.25rem;
+    border-radius: 50px;
+    transition: var(--luxury-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.luxury-nav .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-gradient-gold);
+    transition: var(--luxury-transition);
+    z-index: -1;
+}
+
+.luxury-nav .nav-link:hover::before {
+    left: 0;
+}
+
+.luxury-nav .nav-link:hover {
+    color: var(--luxury-white);
+    transform: translateY(-2px);
+}
+
+.luxury-nav .nav-link i {
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Luxury Buttons */
+.luxury-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--luxury-gold);
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--luxury-transition);
+    position: relative;
+    overflow: hidden;
+    margin: 0 0.5rem;
+}
+
+.luxury-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-gradient-gold);
+    transition: var(--luxury-transition);
+    z-index: -1;
+}
+
+.luxury-btn:hover::before {
+    left: 0;
+}
+
+.luxury-btn-primary {
+    background: var(--luxury-gradient-gold);
+    color: var(--luxury-white);
+    border-color: var(--luxury-gold);
+}
+
+.luxury-btn-primary:hover {
+    color: var(--luxury-white);
+    transform: translateY(-3px);
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.luxury-btn-outline {
+    background: transparent;
+    color: var(--luxury-gold);
+}
+
+.luxury-btn-outline:hover {
+    color: var(--luxury-white);
+    transform: translateY(-3px);
+}
+
+/* Theme Toggle */
+.luxury-theme-toggle {
+    background: none;
+    border: 2px solid var(--luxury-gold);
+    color: var(--luxury-gold);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--luxury-transition);
+    margin: 0 1rem;
+}
+
+.luxury-theme-toggle:hover {
+    background: var(--luxury-gold);
+    color: var(--luxury-white);
+    transform: rotate(180deg);
+}
+
+/* User Menu */
+.luxury-user-menu {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    background: rgba(212, 175, 55, 0.1);
+    transition: var(--luxury-transition);
+}
+
+.luxury-user-menu:hover {
+    background: rgba(212, 175, 55, 0.2);
+    transform: translateY(-2px);
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 0.5rem;
+    border: 2px solid var(--luxury-gold);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar i {
+    font-size: 35px;
+    color: var(--luxury-gold);
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--luxury-charcoal);
+}
+
+/* Luxury Dropdown */
+.luxury-dropdown {
+    background: var(--luxury-white);
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--luxury-shadow-medium);
+    padding: 1rem 0;
+    margin-top: 0.5rem;
+}
+
+.luxury-dropdown .dropdown-item {
+    padding: 0.75rem 1.5rem;
+    color: var(--luxury-charcoal);
+    transition: var(--luxury-transition);
+}
+
+.luxury-dropdown .dropdown-item:hover {
+    background: var(--luxury-gold-light);
+    color: var(--luxury-charcoal);
+    transform: translateX(5px);
+}
+
+/* Luxury Messages */
+.luxury-messages {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 400px;
+}
+
+.luxury-alert {
+    background: var(--luxury-white);
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--luxury-shadow-medium);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.luxury-alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--luxury-gold);
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+}
+
+.alert-content i {
+    color: var(--luxury-gold);
+    margin-left: 1rem;
+    font-size: 1.2rem;
+}
+
+.luxury-close {
+    background: none;
+    border: none;
+    color: var(--luxury-gray);
+    margin-right: auto;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: var(--luxury-transition);
+}
+
+.luxury-close:hover {
+    background: var(--luxury-light-gray);
+    color: var(--luxury-charcoal);
+}
+
+/* Main Content */
+.luxury-main {
+    margin-top: 100px;
+    min-height: calc(100vh - 200px);
+}
+
+/* Animations */
+@keyframes luxuryPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes luxurySpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes luxuryFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes luxurySlideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .luxury-navbar {
+        padding: 0.5rem 0;
+    }
+    
+    .brand-text {
+        font-size: 1.2rem;
+    }
+    
+    .luxury-btn {
+        padding: 0.5rem 1.5rem;
+        margin: 0.25rem;
+    }
+    
+    .luxury-messages {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .luxury-main {
+        margin-top: 80px;
+    }
+}
+
+/* Luxury Toggler */
+.luxury-toggler {
+    border: none;
+    padding: 0.5rem;
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.luxury-toggler span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--luxury-gold);
+    margin: 5px auto;
+    transition: var(--luxury-transition);
+    border-radius: 2px;
+}
+
+.luxury-toggler:not(.collapsed) span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.luxury-toggler:not(.collapsed) span:nth-child(2) {
+    opacity: 0;
+}
+
+.luxury-toggler:not(.collapsed) span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Luxury Footer */
+.luxury-footer {
+    background: var(--luxury-gradient-dark);
+    color: var(--luxury-white);
+    padding: 4rem 0 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23D4AF37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.footer-brand {
+    position: relative;
+    z-index: 2;
+}
+
+.footer-brand i {
+    font-size: 3rem;
+    color: var(--luxury-gold);
+    margin-bottom: 1rem;
+}
+
+.footer-brand h4 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--luxury-gold);
+}
+
+.footer-subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+}
+
+.footer-description {
+    opacity: 0.9;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+.footer-title {
+    font-family: var(--luxury-font-secondary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--luxury-gold);
+    position: relative;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    right: 0;
+    width: 50px;
+    height: 2px;
+    background: var(--luxury-gold);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: var(--luxury-transition);
+    position: relative;
+    padding-right: 1rem;
+}
+
+.footer-links a::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--luxury-gold);
+    transition: var(--luxury-transition);
+}
+
+.footer-links a:hover {
+    color: var(--luxury-gold);
+    transform: translateX(5px);
+}
+
+.footer-links a:hover::before {
+    width: 15px;
+}
+
+.contact-info {
+    margin-bottom: 2rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.contact-item i {
+    color: var(--luxury-gold);
+    width: 20px;
+    margin-left: 1rem;
+    font-size: 1.1rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 2px solid var(--luxury-gold);
+    border-radius: 50%;
+    color: var(--luxury-gold);
+    text-decoration: none;
+    transition: var(--luxury-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-gold);
+    transition: var(--luxury-transition);
+    z-index: -1;
+}
+
+.social-link:hover::before {
+    left: 0;
+}
+
+.social-link:hover {
+    color: var(--luxury-white);
+    transform: translateY(-3px);
+}
+
+.footer-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to left, transparent, var(--luxury-gold), transparent);
+    margin: 3rem 0 2rem;
+}
+
+.footer-bottom {
+    position: relative;
+    z-index: 2;
+}
+
+.copyright,
+.powered-by {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.text-gold {
+    color: var(--luxury-gold);
+}
+
+/* Scroll to Top */
+.luxury-scroll-top {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--luxury-gradient-gold);
+    border: none;
+    border-radius: 50%;
+    color: var(--luxury-white);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--luxury-transition);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1000;
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.luxury-scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.luxury-scroll-top:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+/* Luxury Cards */
+.luxury-card {
+    background: var(--luxury-white);
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+    overflow: hidden;
+    position: relative;
+}
+
+.luxury-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--luxury-gradient-gold);
+}
+
+.luxury-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--luxury-shadow-heavy);
+}
+
+.luxury-card .card-body {
+    padding: 2rem;
+}
+
+.luxury-card .card-title {
+    font-family: var(--luxury-font-secondary);
+    font-weight: 700;
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+}
+
+/* Property Cards */
+.property-card-luxury {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--luxury-white);
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+}
+
+.property-card-luxury:hover {
+    transform: translateY(-15px);
+    box-shadow: var(--luxury-shadow-heavy);
+}
+
+.property-card-luxury .card-img-top {
+    height: 250px;
+    object-fit: cover;
+    transition: var(--luxury-transition);
+}
+
+.property-card-luxury:hover .card-img-top {
+    transform: scale(1.1);
+}
+
+.property-price-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--luxury-gradient-gold);
+    color: var(--luxury-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: var(--luxury-shadow-medium);
+    z-index: 10;
+}
+
+.property-status-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.status-available {
+    background: var(--luxury-emerald);
+    color: var(--luxury-white);
+}
+
+.status-pending {
+    background: #FFA500;
+    color: var(--luxury-white);
+}
+
+.status-approved {
+    background: var(--luxury-emerald);
+    color: var(--luxury-white);
+}
+
+.status-rejected {
+    background: var(--luxury-burgundy);
+    color: var(--luxury-white);
+}
+
+/* Forms */
+.luxury-form-control {
+    border: 2px solid var(--luxury-light-gray);
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: var(--luxury-transition);
+    background: var(--luxury-white);
+}
+
+.luxury-form-control:focus {
+    border-color: var(--luxury-gold);
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+    background: var(--luxury-white);
+}
+
+.luxury-form-label {
+    font-weight: 600;
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+/* Tables */
+.luxury-table {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--luxury-shadow-light);
+}
+
+.luxury-table thead {
+    background: var(--luxury-gradient-gold);
+    color: var(--luxury-white);
+}
+
+.luxury-table th {
+    font-weight: 700;
+    padding: 1.5rem 1rem;
+    border: none;
+}
+
+.luxury-table td {
+    padding: 1.25rem 1rem;
+    border: none;
+    border-bottom: 1px solid var(--luxury-light-gray);
+    vertical-align: middle;
+}
+
+.luxury-table tbody tr:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .luxury-footer {
+        padding: 3rem 0 1.5rem;
+    }
+
+    .footer-brand h4 {
+        font-size: 1.5rem;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .luxury-scroll-top {
+        bottom: 20px;
+        left: 20px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .property-card-luxury .card-img-top {
+        height: 200px;
+    }
+
+    .property-price-badge {
+        top: 15px;
+        right: 15px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,848 @@
+{% extends 'base.html' %}
+
+{% block title %}الملف الشخصي - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Profile Header -->
+<section class="profile-header">
+    <div class="header-background"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="profile-info" data-aos="fade-right">
+                    <div class="profile-avatar-large">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="صورة الملف الشخصي">
+                        {% else %}
+                            <i class="fas fa-user"></i>
+                        {% endif %}
+                        <div class="avatar-badge">
+                            {% if user.user_type == 'owner' %}
+                                <i class="fas fa-crown"></i>
+                            {% elif user.user_type == 'client' %}
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <h1 class="profile-name">{{ user.get_full_name|default:user.username }}</h1>
+                        <p class="profile-type">
+                            {% if user.user_type == 'owner' %}
+                                <i class="fas fa-building me-2"></i>
+                                مالك عقارات فاخرة
+                            {% elif user.user_type == 'client' %}
+                                <i class="fas fa-search me-2"></i>
+                                عميل مميز
+                            {% endif %}
+                        </p>
+                        <div class="profile-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                عضو منذ {{ user.date_joined|date:"F Y" }}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ user.email }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="profile-actions" data-aos="fade-left">
+                    <button class="luxury-btn luxury-btn-outline" onclick="editProfile()">
+                        <i class="fas fa-edit me-2"></i>
+                        تعديل الملف الشخصي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Statistics Cards -->
+            <div class="row mb-5">
+                {% if user.user_type == 'owner' %}
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>{{ total_properties }}</h3>
+                                <p>عقار مدرج</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="200">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>{{ active_properties }}</h3>
+                                <p>عقار نشط</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="stat-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>25</h3>
+                                <p>طلب إيجار</p>
+                            </div>
+                        </div>
+                    </div>
+                {% elif user.user_type == 'client' %}
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="stat-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>{{ user.rental_requests.count }}</h3>
+                                <p>طلب إيجار</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="200">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>12</h3>
+                                <p>عقار مفضل</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="profile-stat-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>156</h3>
+                                <p>عقار تم تصفحه</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section" data-aos="fade-up">
+                <div class="section-header">
+                    <h4>
+                        <i class="fas fa-clock me-2"></i>
+                        النشاط الأخير
+                    </h4>
+                </div>
+                
+                <div class="activity-timeline">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>تم إضافة عقار جديد</h6>
+                            <p>شقة فاخرة في حي النخيل - الرياض</p>
+                            <small>منذ 2 ساعة</small>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>طلب إيجار جديد</h6>
+                            <p>تم استلام طلب إيجار لفيلا الورود</p>
+                            <small>منذ 5 ساعات</small>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>تم قبول العقار</h6>
+                            <p>تم قبول عقار "قصر الأمراء" ونشره في الموقع</p>
+                            <small>منذ يوم واحد</small>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>تم تحديث الملف الشخصي</h6>
+                            <p>تم تحديث معلومات الاتصال</p>
+                            <small>منذ 3 أيام</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions-section" data-aos="fade-up" data-aos-delay="200">
+                <div class="section-header">
+                    <h4>
+                        <i class="fas fa-bolt me-2"></i>
+                        إجراءات سريعة
+                    </h4>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    {% if user.user_type == 'owner' %}
+                        <a href="{% url 'properties:add_property_request' %}" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <h6>إضافة عقار جديد</h6>
+                            <p>أضف عقارك الفاخر للموقع</p>
+                        </a>
+                        
+                        <a href="{% url 'properties:my_properties' %}" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h6>إدارة عقاراتي</h6>
+                            <p>عرض وإدارة جميع عقاراتك</p>
+                        </a>
+                        
+                        <a href="{% url 'properties:my_requests' %}" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <h6>طلبات الإيجار</h6>
+                            <p>متابعة طلبات إيجار عقاراتك</p>
+                        </a>
+                    {% elif user.user_type == 'client' %}
+                        <a href="{% url 'properties:property_list' %}" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h6>البحث عن عقار</h6>
+                            <p>ابحث في أرقى العقارات</p>
+                        </a>
+                        
+                        <a href="{% url 'properties:my_requests' %}" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <h6>طلباتي</h6>
+                            <p>متابعة طلبات الإيجار</p>
+                        </a>
+                        
+                        <a href="#" class="quick-action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h6>المفضلة</h6>
+                            <p>عقاراتك المفضلة</p>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Profile Info Card -->
+            <div class="profile-info-card luxury-card sticky-top" data-aos="fade-left" style="top: 120px;">
+                <div class="info-header">
+                    <h5>معلومات الملف الشخصي</h5>
+                </div>
+                <div class="info-body">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-user me-2"></i>
+                            اسم المستخدم
+                        </div>
+                        <div class="info-value">{{ user.username }}</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-envelope me-2"></i>
+                            البريد الإلكتروني
+                        </div>
+                        <div class="info-value">{{ user.email }}</div>
+                    </div>
+                    
+                    {% if user.phone %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-phone me-2"></i>
+                                رقم الهاتف
+                            </div>
+                            <div class="info-value">{{ user.phone }}</div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-users me-2"></i>
+                            نوع الحساب
+                        </div>
+                        <div class="info-value">
+                            {% if user.user_type == 'owner' %}
+                                مالك عقارات
+                            {% elif user.user_type == 'client' %}
+                                عميل
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            تاريخ الانضمام
+                        </div>
+                        <div class="info-value">{{ user.date_joined|date:"d/m/Y" }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-actions">
+                    <button class="luxury-btn luxury-btn-primary w-100 mb-2" onclick="editProfile()">
+                        <i class="fas fa-edit me-2"></i>
+                        تعديل المعلومات
+                    </button>
+                    <button class="luxury-btn luxury-btn-outline w-100" onclick="changePassword()">
+                        <i class="fas fa-lock me-2"></i>
+                        تغيير كلمة المرور
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Account Security -->
+            <div class="security-card luxury-card mt-4" data-aos="fade-left" data-aos-delay="200">
+                <div class="security-header">
+                    <h6>أمان الحساب</h6>
+                </div>
+                <div class="security-body">
+                    <div class="security-item">
+                        <div class="security-icon verified">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="security-content">
+                            <h6>البريد الإلكتروني</h6>
+                            <p>تم التحقق</p>
+                        </div>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="security-content">
+                            <h6>رقم الهاتف</h6>
+                            <p>في انتظار التحقق</p>
+                        </div>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-icon verified">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="security-content">
+                            <h6>كلمة المرور</h6>
+                            <p>قوية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Profile Header */
+.profile-header {
+    background: var(--luxury-gradient-dark);
+    color: white;
+    padding: 8rem 0 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="profile-pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23D4AF37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23profile-pattern)"/></svg>');
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.profile-avatar-large {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--luxury-gold);
+    box-shadow: var(--luxury-shadow-gold);
+    flex-shrink: 0;
+}
+
+.profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-large i {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--luxury-light-gray);
+    color: var(--luxury-gray);
+    font-size: 3rem;
+}
+
+.avatar-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 35px;
+    height: 35px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    border: 3px solid white;
+}
+
+.profile-name {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--luxury-gold);
+}
+
+.profile-type {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.profile-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.meta-item {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.profile-actions {
+    text-align: center;
+}
+
+/* Profile Statistics */
+.profile-stat-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+    transition: var(--luxury-transition);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-left: 4px solid var(--luxury-gold);
+    height: 100%;
+}
+
+.profile-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--luxury-shadow-medium);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--luxury-charcoal);
+    margin: 0;
+    font-family: var(--luxury-font-secondary);
+}
+
+.stat-content p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-weight: 600;
+}
+
+/* Activity Section */
+.activity-section {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+    margin-bottom: 3rem;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--luxury-gold);
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-family: var(--luxury-font-secondary);
+    font-weight: 600;
+}
+
+.activity-timeline {
+    position: relative;
+}
+
+.activity-timeline::before {
+    content: '';
+    position: absolute;
+    right: 30px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--luxury-light-gray);
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.activity-item:last-child {
+    margin-bottom: 0;
+}
+
+.activity-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.activity-content h6 {
+    margin: 0 0 0.5rem 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.activity-content p {
+    margin: 0 0 0.5rem 0;
+    color: var(--luxury-gray);
+    line-height: 1.5;
+}
+
+.activity-content small {
+    color: var(--luxury-gray);
+    font-size: 0.85rem;
+}
+
+/* Quick Actions */
+.quick-actions-section {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--luxury-shadow-light);
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.quick-action-card {
+    background: var(--luxury-pearl);
+    border-radius: 15px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: var(--luxury-transition);
+    border: 2px solid transparent;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--luxury-gold);
+    box-shadow: var(--luxury-shadow-light);
+    color: inherit;
+}
+
+.action-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.quick-action-card h6 {
+    margin: 0 0 0.5rem 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.quick-action-card p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+/* Profile Info Card */
+.profile-info-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.info-header {
+    background: var(--luxury-gradient-gold);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.info-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.info-body {
+    padding: 2rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.info-value {
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+    text-align: left;
+    flex: 1;
+}
+
+.info-actions {
+    padding: 1.5rem;
+    background: var(--luxury-pearl);
+    border-top: 1px solid var(--luxury-light-gray);
+}
+
+/* Security Card */
+.security-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.security-header {
+    background: var(--luxury-pearl);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.security-header h6 {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.security-body {
+    padding: 1.5rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.security-item:last-child {
+    margin-bottom: 0;
+}
+
+.security-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.security-icon.verified {
+    background: var(--luxury-emerald);
+}
+
+.security-icon.pending {
+    background: #FFA500;
+}
+
+.security-content h6 {
+    margin: 0 0 0.25rem 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.security-content p {
+    margin: 0;
+    color: var(--luxury-gray);
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .profile-name {
+        font-size: 2rem;
+    }
+    
+    .profile-meta {
+        align-items: center;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .info-value {
+        text-align: right;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editProfile() {
+    showLuxuryNotification('جاري تحميل صفحة تعديل الملف الشخصي...', 'info');
+    // This would typically redirect to edit profile page
+    setTimeout(() => {
+        window.location.href = '/users/edit-profile/';
+    }, 1000);
+}
+
+function changePassword() {
+    showLuxuryNotification('جاري تحميل صفحة تغيير كلمة المرور...', 'info');
+    // This would typically redirect to change password page
+    setTimeout(() => {
+        window.location.href = '/users/change-password/';
+    }, 1000);
+}
+
+// Auto-refresh activity every 5 minutes
+setInterval(function() {
+    // This would typically make an AJAX request to refresh activity
+    console.log('Refreshing activity data...');
+}, 300000);
+
+// Profile completion check
+document.addEventListener('DOMContentLoaded', function() {
+    const profileFields = [
+        '{{ user.first_name }}',
+        '{{ user.last_name }}',
+        '{{ user.email }}',
+        '{{ user.phone|default:"" }}'
+    ];
+    
+    const completedFields = profileFields.filter(field => field.trim() !== '').length;
+    const completionPercentage = Math.round((completedFields / profileFields.length) * 100);
+    
+    if (completionPercentage < 100) {
+        setTimeout(() => {
+            showLuxuryNotification(`ملفك الشخصي مكتمل بنسبة ${completionPercentage}%. أكمل معلوماتك للحصول على تجربة أفضل.`, 'info');
+        }, 2000);
+    }
+});
+</script>
+{% endblock %}

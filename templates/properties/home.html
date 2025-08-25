@@ -1,0 +1,737 @@
+{% extends 'base.html' %}
+
+{% block title %}العقارات الفاخرة - أرقى العقارات في المملكة{% endblock %}
+
+{% block content %}
+<!-- Luxury Hero Section -->
+<section class="luxury-hero">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+        <div class="hero-particles"></div>
+    </div>
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1200">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-line">العقارات</span>
+                        <span class="title-line luxury-gradient-text">الفاخرة</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        اكتشف أرقى وأفخم العقارات في المملكة العربية السعودية
+                    </p>
+                    <p class="hero-description">
+                        نحن نقدم مجموعة حصرية من العقارات الفاخرة التي تجمع بين الأناقة والراحة والموقع المتميز. 
+                        استمتع بتجربة فريدة في البحث عن منزل أحلامك.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="{% url 'properties:property_list' %}" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                            <i class="fas fa-search me-2"></i>
+                            استكشف العقارات الفاخرة
+                        </a>
+                        {% if user.is_authenticated and user.user_type == 'owner' %}
+                            <a href="{% url 'properties:add_property_request' %}" class="luxury-btn luxury-btn-outline luxury-btn-lg">
+                                <i class="fas fa-crown me-2"></i>
+                                عرض عقارك الفاخر
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">عقار فاخر</div>
+                        </div>
+                        <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                            <div class="stat-number">1000+</div>
+                            <div class="stat-label">عميل راضٍ</div>
+                        </div>
+                        <div class="stat-item" data-aos="fade-up" data-aos-delay="600">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">سنة خبرة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1200">
+                <div class="hero-image">
+                    <div class="image-frame">
+                        <div class="floating-card" data-aos="zoom-in" data-aos-delay="800">
+                            <i class="fas fa-crown"></i>
+                            <h4>عقارات حصرية</h4>
+                            <p>أفخم العقارات في أرقى الأحياء</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll-indicator">
+        <div class="scroll-arrow">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Luxury Search Section -->
+<section class="luxury-search-section py-5">
+    <div class="container">
+        <div class="luxury-search-card" data-aos="fade-up">
+            <div class="search-header">
+                <h3>ابحث عن عقارك المثالي</h3>
+                <p>استخدم الفلاتر المتقدمة للعثور على العقار الذي يناسب احتياجاتك</p>
+            </div>
+            <form method="GET" action="{% url 'properties:property_list' %}" class="luxury-search-form">
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="search-field">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-building me-2"></i>
+                                نوع العقار
+                            </label>
+                            <select name="type" class="luxury-form-control">
+                                <option value="">جميع الأنواع</option>
+                                <option value="apartment">شقة فاخرة</option>
+                                <option value="villa">فيلا راقية</option>
+                                <option value="office">مكتب تجاري</option>
+                                <option value="shop">محل تجاري</option>
+                                <option value="warehouse">مستودع</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="search-field">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                المدينة
+                            </label>
+                            <input type="text" name="city" class="luxury-form-control" placeholder="اختر المدينة">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="search-field">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-coins me-2"></i>
+                                السعر من
+                            </label>
+                            <input type="number" name="min_price" class="luxury-form-control" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="search-field">
+                            <label class="luxury-form-label">السعر إلى</label>
+                            <input type="number" name="max_price" class="luxury-form-control" placeholder="50000">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button type="submit" class="luxury-btn luxury-btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>
+                            بحث فاخر
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+<section class="luxury-properties-section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title">
+                <span class="title-decoration"></span>
+                العقارات المميزة
+                <span class="title-decoration"></span>
+            </h2>
+            <p class="section-subtitle">
+                مجموعة مختارة من أرقى العقارات الفاخرة المتاحة للإيجار
+            </p>
+        </div>
+        
+        <div class="row luxury-stagger">
+            {% for property in featured_properties %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="property-card-luxury luxury-card">
+                        <div class="property-image-container">
+                            {% if property.images.first %}
+                                <img src="{{ property.images.first.image.url }}" 
+                                     class="card-img-top" alt="{{ property.title }}">
+                            {% else %}
+                                <div class="property-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>صورة العقار</span>
+                                </div>
+                            {% endif %}
+                            <div class="property-price-badge">
+                                {{ property.price|floatformat:0 }} ريال/شهر
+                            </div>
+                            <div class="property-status-badge status-available">
+                                متاح للإيجار
+                            </div>
+                            <div class="property-overlay">
+                                <div class="overlay-content">
+                                    <a href="{% url 'properties:property_detail' property.pk %}" 
+                                       class="luxury-btn luxury-btn-outline">
+                                        <i class="fas fa-eye me-2"></i>
+                                        عرض التفاصيل
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">{{ property.title }}</h5>
+                            <p class="property-location">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ property.city }}
+                            </p>
+                            <p class="card-text">{{ property.description|truncatewords:15 }}</p>
+                            
+                            <div class="property-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                    <span>{{ property.area }} م²</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bed"></i>
+                                    <span>{{ property.bedrooms }} غرفة</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bath"></i>
+                                    <span>{{ property.bathrooms }} حمام</span>
+                                </div>
+                            </div>
+                            
+                            <div class="property-actions">
+                                <a href="{% url 'properties:property_detail' property.pk %}" 
+                                   class="luxury-btn luxury-btn-outline flex-fill">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    التفاصيل
+                                </a>
+                                {% if user.is_authenticated and user.user_type == 'client' %}
+                                    <a href="{% url 'properties:rent_request' property.pk %}" 
+                                       class="luxury-btn luxury-btn-primary flex-fill">
+                                        <i class="fas fa-handshake me-2"></i>
+                                        طلب إيجار
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="empty-state" data-aos="fade-up">
+                        <div class="empty-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h4>لا توجد عقارات متاحة حالياً</h4>
+                        <p>نعمل على إضافة المزيد من العقارات الفاخرة قريباً</p>
+                        {% if user.is_authenticated and user.user_type == 'owner' %}
+                            <a href="{% url 'properties:add_property_request' %}" class="luxury-btn luxury-btn-primary">
+                                <i class="fas fa-plus me-2"></i>
+                                أضف عقارك الفاخر
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if featured_properties %}
+            <div class="text-center mt-5" data-aos="fade-up">
+                <a href="{% url 'properties:property_list' %}" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                    <i class="fas fa-th-large me-2"></i>
+                    عرض جميع العقارات الفاخرة
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Luxury Services Section -->
+<section class="luxury-services-section py-5">
+    <div class="services-background"></div>
+    <div class="container">
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title text-white">
+                <span class="title-decoration"></span>
+                خدماتنا الفاخرة
+                <span class="title-decoration"></span>
+            </h2>
+            <p class="section-subtitle text-white">
+                نقدم مجموعة شاملة من الخدمات العقارية الراقية
+            </p>
+        </div>
+        
+        <div class="row luxury-stagger">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-card luxury-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>أمان وثقة</h4>
+                    <p>جميع العقارات مفحوصة ومعتمدة من قبل خبرائنا المختصين</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-card luxury-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <h4>خدمة عملاء راقية</h4>
+                    <p>فريق متخصص لخدمتك على مدار الساعة بأعلى معايير الجودة</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="service-card luxury-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h4>عقارات حصرية</h4>
+                    <p>مجموعة مختارة من أرقى العقارات في أفضل المواقع</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero Section Styles */
+.luxury-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1A1A1A 0%, #2C2C2C 50%, #1A1A1A 100%);
+    z-index: -2;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(212, 175, 55, 0.1) 0%, rgba(26, 26, 26, 0.8) 100%);
+    z-index: -1;
+}
+
+.hero-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(212, 175, 55, 0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(212, 175, 55, 0.4), transparent);
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    animation: luxuryFloat 20s linear infinite;
+}
+
+.hero-content {
+    color: white;
+    z-index: 2;
+}
+
+.hero-title {
+    font-family: var(--luxury-font-secondary);
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.title-line {
+    display: block;
+}
+
+.luxury-gradient-text {
+    background: var(--luxury-gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--luxury-gold-light);
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.luxury-btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--luxury-gold);
+    font-family: var(--luxury-font-secondary);
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+.hero-image {
+    position: relative;
+    height: 500px;
+}
+
+.image-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-gradient-gold);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.floating-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: var(--luxury-shadow-heavy);
+    backdrop-filter: blur(10px);
+}
+
+.floating-card i {
+    font-size: 3rem;
+    color: var(--luxury-gold);
+    margin-bottom: 1rem;
+}
+
+.floating-card h4 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.5rem;
+}
+
+.floating-card p {
+    color: var(--luxury-gray);
+    margin: 0;
+}
+
+.hero-scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--luxury-gold);
+}
+
+.scroll-arrow {
+    animation: luxuryBounce 2s infinite;
+}
+
+/* Search Section */
+.luxury-search-section {
+    background: var(--luxury-pearl);
+    margin-top: -50px;
+    position: relative;
+    z-index: 10;
+}
+
+.luxury-search-card {
+    background: var(--luxury-white);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: var(--luxury-shadow-heavy);
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.search-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.search-header h3 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.5rem;
+}
+
+.search-header p {
+    color: var(--luxury-gray);
+    font-size: 1.1rem;
+}
+
+/* Properties Section */
+.luxury-properties-section {
+    background: var(--luxury-cream);
+}
+
+.section-header {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--luxury-charcoal);
+    position: relative;
+    display: inline-block;
+}
+
+.title-decoration {
+    display: inline-block;
+    width: 50px;
+    height: 2px;
+    background: var(--luxury-gold);
+    margin: 0 1rem;
+    vertical-align: middle;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--luxury-gray);
+    margin-top: 1rem;
+}
+
+.property-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px 15px 0 0;
+}
+
+.property-placeholder {
+    height: 250px;
+    background: var(--luxury-light-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--luxury-gray);
+}
+
+.property-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.property-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--luxury-transition);
+}
+
+.property-card-luxury:hover .property-overlay {
+    opacity: 1;
+}
+
+.property-location {
+    color: var(--luxury-gray);
+    margin-bottom: 1rem;
+}
+
+.property-features {
+    display: flex;
+    justify-content: space-between;
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--luxury-light-gray);
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--luxury-gray);
+}
+
+.feature-item i {
+    color: var(--luxury-gold);
+    margin-bottom: 0.5rem;
+}
+
+.property-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon i {
+    font-size: 5rem;
+    color: var(--luxury-gold);
+    margin-bottom: 2rem;
+}
+
+.empty-state h4 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--luxury-gray);
+    margin-bottom: 2rem;
+}
+
+/* Services Section */
+.luxury-services-section {
+    position: relative;
+    background: var(--luxury-gradient-dark);
+    overflow: hidden;
+}
+
+.services-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="luxury-pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23D4AF37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23luxury-pattern)"/></svg>');
+}
+
+.service-card {
+    text-align: center;
+    padding: 3rem 2rem;
+    height: 100%;
+    transition: var(--luxury-transition);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.service-icon i {
+    font-size: 2rem;
+    color: var(--luxury-white);
+}
+
+.service-card h4 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-family: var(--luxury-font-secondary);
+}
+
+.service-card p {
+    color: var(--luxury-gray);
+    line-height: 1.6;
+}
+
+/* Animations */
+@keyframes luxuryFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes luxuryBounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+        gap: 2rem;
+    }
+    
+    .luxury-search-card {
+        padding: 2rem 1rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .property-features {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .feature-item {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .feature-item i {
+        margin-bottom: 0;
+        margin-left: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

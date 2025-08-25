@@ -1,0 +1,774 @@
+{% extends 'base.html' %}
+
+{% block title %}تعديل الملف الشخصي - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Luxury Page Header -->
+<section class="luxury-page-header">
+    <div class="header-background"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="page-title-content" data-aos="fade-right">
+                    <h1 class="page-title">
+                        <i class="fas fa-user-edit me-3"></i>
+                        تعديل الملف الشخصي
+                    </h1>
+                    <p class="page-subtitle">
+                        حدث معلوماتك الشخصية للحصول على تجربة أفضل
+                    </p>
+                    <div class="breadcrumb-luxury">
+                        <a href="{% url 'properties:home' %}">الرئيسية</a>
+                        <i class="fas fa-chevron-left"></i>
+                        <a href="{% url 'users:profile' %}">الملف الشخصي</a>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>تعديل الملف الشخصي</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="header-actions" data-aos="fade-left">
+                    <a href="{% url 'users:profile' %}" class="luxury-btn luxury-btn-outline">
+                        <i class="fas fa-arrow-right me-2"></i>
+                        العودة للملف الشخصي
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Edit Profile Form -->
+            <div class="luxury-edit-profile-card" data-aos="fade-up">
+                <div class="form-header">
+                    <div class="header-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3>تحديث معلوماتك الشخصية</h3>
+                    <p>قم بتحديث معلوماتك للحصول على تجربة مخصصة أكثر</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="luxury-edit-form">
+                    {% csrf_token %}
+                    
+                    <!-- Profile Picture Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-camera me-2"></i>
+                                الصورة الشخصية
+                            </h4>
+                        </div>
+                        
+                        <div class="profile-picture-section">
+                            <div class="current-picture">
+                                {% if user.profile_image %}
+                                    <img src="{{ user.profile_image.url }}" alt="الصورة الحالية" id="currentProfileImage">
+                                {% else %}
+                                    <div class="no-picture" id="currentProfileImage">
+                                        <i class="fas fa-user"></i>
+                                        <span>لا توجد صورة</span>
+                                    </div>
+                                {% endif %}
+                                <div class="picture-overlay">
+                                    <button type="button" class="change-picture-btn" onclick="document.getElementById('id_profile_image').click()">
+                                        <i class="fas fa-camera"></i>
+                                        <span>تغيير الصورة</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="picture-upload">
+                                {{ form.profile_image }}
+                                {% if form.profile_image.errors %}
+                                    <div class="error-message">
+                                        {% for error in form.profile_image.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="upload-help">
+                                    <small>اختر صورة بصيغة JPG أو PNG بحجم أقصى 5 ميجابايت</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-user me-2"></i>
+                                المعلومات الشخصية
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-user me-2"></i>
+                                        اسم المستخدم *
+                                    </label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.username.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-envelope me-2"></i>
+                                        البريد الإلكتروني *
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.email.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-id-badge me-2"></i>
+                                        الاسم الأول
+                                    </label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.first_name.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-id-badge me-2"></i>
+                                        الاسم الأخير
+                                    </label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.last_name.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-phone me-2"></i>
+                                رقم الهاتف
+                            </label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="error-message">
+                                    {% for error in form.phone.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Account Settings Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-cog me-2"></i>
+                                إعدادات الحساب
+                            </h4>
+                        </div>
+                        
+                        <div class="account-info">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-users me-2"></i>
+                                    نوع الحساب
+                                </div>
+                                <div class="info-value">
+                                    {% if user.user_type == 'owner' %}
+                                        <span class="badge badge-owner">
+                                            <i class="fas fa-building me-1"></i>
+                                            مالك عقارات
+                                        </span>
+                                    {% elif user.user_type == 'client' %}
+                                        <span class="badge badge-client">
+                                            <i class="fas fa-user me-1"></i>
+                                            عميل
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    تاريخ الانضمام
+                                </div>
+                                <div class="info-value">{{ user.date_joined|date:"d F Y" }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-clock me-2"></i>
+                                    آخر تسجيل دخول
+                                </div>
+                                <div class="info-value">{{ user.last_login|date:"d F Y H:i" }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="security-actions">
+                            <a href="{% url 'users:change_password' %}" class="luxury-btn luxury-btn-outline">
+                                <i class="fas fa-lock me-2"></i>
+                                تغيير كلمة المرور
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="submit" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                            <i class="fas fa-save me-2"></i>
+                            حفظ التغييرات
+                        </button>
+                        <a href="{% url 'users:profile' %}" class="luxury-btn luxury-btn-outline luxury-btn-lg">
+                            <i class="fas fa-times me-2"></i>
+                            إلغاء
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Profile Completion Card -->
+            <div class="profile-completion-card luxury-card sticky-top" data-aos="fade-left" style="top: 120px;">
+                <div class="completion-header">
+                    <h5>اكتمال الملف الشخصي</h5>
+                </div>
+                <div class="completion-body">
+                    <div class="completion-progress">
+                        <div class="progress-circle" data-percentage="75">
+                            <div class="progress-text">75%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-items">
+                        <div class="completion-item completed">
+                            <i class="fas fa-check-circle"></i>
+                            <span>اسم المستخدم</span>
+                        </div>
+                        <div class="completion-item completed">
+                            <i class="fas fa-check-circle"></i>
+                            <span>البريد الإلكتروني</span>
+                        </div>
+                        <div class="completion-item pending">
+                            <i class="fas fa-clock"></i>
+                            <span>الصورة الشخصية</span>
+                        </div>
+                        <div class="completion-item pending">
+                            <i class="fas fa-clock"></i>
+                            <span>رقم الهاتف</span>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-tip">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <span>أكمل ملفك الشخصي للحصول على تجربة أفضل</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Tips Card -->
+            <div class="security-tips-card luxury-card mt-4" data-aos="fade-left" data-aos-delay="200">
+                <div class="tips-header">
+                    <h6>نصائح الأمان</h6>
+                </div>
+                <div class="tips-body">
+                    <div class="tip-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>استخدم كلمة مرور قوية</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <span>تحقق من بريدك الإلكتروني</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>أضف رقم هاتفك للأمان</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-user-secret"></i>
+                        <span>لا تشارك معلوماتك الشخصية</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Edit Profile Card */
+.luxury-edit-profile-card {
+    background: var(--luxury-white);
+    border-radius: 25px;
+    box-shadow: var(--luxury-shadow-heavy);
+    overflow: hidden;
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.form-header {
+    background: linear-gradient(135deg, var(--luxury-pearl) 0%, var(--luxury-white) 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2rem;
+    color: white;
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.form-header h3 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    color: var(--luxury-gray);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Profile Picture Section */
+.profile-picture-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.current-picture {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--luxury-gold);
+    box-shadow: var(--luxury-shadow-gold);
+    cursor: pointer;
+}
+
+.current-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-picture {
+    width: 100%;
+    height: 100%;
+    background: var(--luxury-light-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--luxury-gray);
+}
+
+.no-picture i {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.picture-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--luxury-transition);
+}
+
+.current-picture:hover .picture-overlay {
+    opacity: 1;
+}
+
+.change-picture-btn {
+    background: none;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.change-picture-btn i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.picture-upload {
+    flex: 1;
+}
+
+.picture-upload input[type="file"] {
+    display: none;
+}
+
+.upload-help {
+    margin-top: 0.5rem;
+}
+
+.upload-help small {
+    color: var(--luxury-gray);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Account Info */
+.account-info {
+    background: var(--luxury-pearl);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--luxury-gray);
+    font-weight: 600;
+}
+
+.info-value {
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.badge-owner {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--luxury-gold);
+    border: 1px solid var(--luxury-gold-light);
+}
+
+.badge-client {
+    background: rgba(80, 200, 120, 0.1);
+    color: var(--luxury-emerald);
+    border: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.security-actions {
+    text-align: center;
+}
+
+/* Profile Completion Card */
+.profile-completion-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.completion-header {
+    background: var(--luxury-gradient-gold);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.completion-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.completion-body {
+    padding: 2rem;
+}
+
+.completion-progress {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.progress-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(var(--luxury-gold) 0deg 270deg, var(--luxury-light-gray) 270deg 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+}
+
+.progress-circle::before {
+    content: '';
+    width: 70px;
+    height: 70px;
+    background: var(--luxury-white);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.progress-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--luxury-gold);
+    z-index: 1;
+    font-family: var(--luxury-font-secondary);
+}
+
+.completion-items {
+    margin-bottom: 2rem;
+}
+
+.completion-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.completion-item.completed i {
+    color: var(--luxury-emerald);
+}
+
+.completion-item.pending i {
+    color: var(--luxury-gray);
+}
+
+.completion-tip {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    color: var(--luxury-charcoal);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.completion-tip i {
+    color: var(--luxury-gold);
+}
+
+/* Security Tips Card */
+.security-tips-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.tips-header {
+    background: var(--luxury-pearl);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.tips-header h6 {
+    margin: 0;
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.tips-body {
+    padding: 1.5rem;
+}
+
+.tip-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--luxury-gray);
+}
+
+.tip-item:last-child {
+    margin-bottom: 0;
+}
+
+.tip-item i {
+    color: var(--luxury-gold);
+    width: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-picture-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .current-picture {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .form-header {
+        padding: 2rem 1.5rem;
+    }
+    
+    .form-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Profile picture preview
+document.getElementById('id_profile_image').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        const currentImage = document.getElementById('currentProfileImage');
+        
+        reader.onload = function(e) {
+            if (currentImage.tagName === 'IMG') {
+                currentImage.src = e.target.result;
+            } else {
+                // Replace the no-picture div with an img
+                const newImg = document.createElement('img');
+                newImg.src = e.target.result;
+                newImg.alt = 'الصورة الجديدة';
+                newImg.id = 'currentProfileImage';
+                currentImage.parentNode.replaceChild(newImg, currentImage);
+            }
+        };
+        
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+
+// Form validation
+document.querySelector('.luxury-edit-form').addEventListener('submit', function(e) {
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري الحفظ...';
+    submitBtn.disabled = true;
+    
+    // Re-enable after a delay (in case of validation errors)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 3000);
+});
+
+// Phone number formatting
+const phoneInput = document.getElementById('id_phone');
+if (phoneInput) {
+    phoneInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length > 0) {
+            if (value.startsWith('966')) {
+                value = '+' + value;
+            } else if (value.startsWith('05')) {
+                value = '+966' + value.substring(1);
+            } else if (value.startsWith('5')) {
+                value = '+9665' + value.substring(1);
+            }
+        }
+        this.value = value;
+    });
+}
+
+// Real-time validation
+document.querySelectorAll('.luxury-form-control').forEach(input => {
+    input.addEventListener('blur', function() {
+        if (this.hasAttribute('required') && !this.value.trim()) {
+            this.style.borderColor = 'var(--luxury-burgundy)';
+        } else {
+            this.style.borderColor = 'var(--luxury-light-gray)';
+        }
+    });
+    
+    input.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--luxury-gold)';
+    });
+});
+
+// Email validation
+document.querySelectorAll('input[type="email"]').forEach(input => {
+    input.addEventListener('blur', function() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (this.value && !emailRegex.test(this.value)) {
+            this.style.borderColor = 'var(--luxury-burgundy)';
+            showLuxuryNotification('يرجى إدخال بريد إلكتروني صحيح', 'error');
+        } else if (this.value) {
+            this.style.borderColor = 'var(--luxury-emerald)';
+        }
+    });
+});
+</script>
+{% endblock %}

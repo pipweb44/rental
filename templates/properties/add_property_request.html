@@ -1,0 +1,880 @@
+{% extends 'base.html' %}
+
+{% block title %}طلب عرض عقار فاخر - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Luxury Page Header -->
+<section class="luxury-page-header">
+    <div class="header-background"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="page-title-content" data-aos="fade-right">
+                    <h1 class="page-title">
+                        <i class="fas fa-crown me-3"></i>
+                        طلب عرض عقار فاخر
+                    </h1>
+                    <p class="page-subtitle">
+                        شاركنا عقارك الفاخر ليصل إلى أفضل العملاء المميزين
+                    </p>
+                    <div class="breadcrumb-luxury">
+                        <a href="{% url 'properties:home' %}">الرئيسية</a>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>طلب عرض عقار فاخر</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="header-stats" data-aos="fade-left">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">عقار فاخر معروض</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Info Alert -->
+            <div class="luxury-info-alert" data-aos="fade-up">
+                <div class="alert-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="alert-content">
+                    <h5>معلومات مهمة قبل إرسال طلبك</h5>
+                    <ul class="info-list">
+                        <li>سيتم مراجعة طلبك من قبل فريق الخبراء المختصين</li>
+                        <li>عند الموافقة، سيتم عرض عقارك في قسم العقارات الفاخرة</li>
+                        <li>تأكد من إدخال جميع المعلومات بدقة ووضوح</li>
+                        <li>إضافة صور عالية الجودة يزيد من فرص الموافقة</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Form Card -->
+            <div class="luxury-form-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="form-header">
+                    <h3>
+                        <i class="fas fa-gem me-2"></i>
+                        تفاصيل العقار الفاخر
+                    </h3>
+                    <p>املأ النموذج بعناية لضمان أفضل عرض لعقارك</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="luxury-property-form">
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-info-circle me-2"></i>
+                                المعلومات الأساسية
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-tag me-2"></i>
+                                        عنوان العقار *
+                                    </label>
+                                    {{ form.title }}
+                                    {% if form.title.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.title.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-building me-2"></i>
+                                        نوع العقار *
+                                    </label>
+                                    {{ form.property_type }}
+                                    {% if form.property_type.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.property_type.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-align-left me-2"></i>
+                                وصف العقار *
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="error-message">
+                                    {% for error in form.description.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                <small>اكتب وصفاً مفصلاً وجذاباً لعقارك يبرز مميزاته الفاخرة</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                معلومات الموقع
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-city me-2"></i>
+                                        المدينة *
+                                    </label>
+                                    {{ form.city }}
+                                    {% if form.city.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.city.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-expand-arrows-alt me-2"></i>
+                                        المساحة (متر مربع) *
+                                    </label>
+                                    {{ form.area }}
+                                    {% if form.area.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.area.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label class="luxury-form-label">
+                                <i class="fas fa-map me-2"></i>
+                                العنوان التفصيلي *
+                            </label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <div class="error-message">
+                                    {% for error in form.address.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Property Details Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-home me-2"></i>
+                                تفاصيل العقار
+                            </h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-bed me-2"></i>
+                                        عدد غرف النوم
+                                    </label>
+                                    {{ form.bedrooms }}
+                                    {% if form.bedrooms.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.bedrooms.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-bath me-2"></i>
+                                        عدد دورات المياه
+                                    </label>
+                                    {{ form.bathrooms }}
+                                    {% if form.bathrooms.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.bathrooms.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="form-group">
+                                    <label class="luxury-form-label">
+                                        <i class="fas fa-coins me-2"></i>
+                                        السعر الشهري (ريال) *
+                                    </label>
+                                    {{ form.price }}
+                                    {% if form.price.errors %}
+                                        <div class="error-message">
+                                            {% for error in form.price.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Images Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h4>
+                                <i class="fas fa-camera me-2"></i>
+                                صور العقار الفاخر
+                            </h4>
+                        </div>
+                        
+                        <div class="image-upload-section">
+                            <div class="upload-info">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h5>إضافة صور عالية الجودة</h5>
+                                <p>اختر صوراً واضحة وجذابة تبرز جمال وفخامة عقارك</p>
+                            </div>
+                            
+                            <div id="imageUploadContainer">
+                                <div class="image-upload-item">
+                                    <div class="upload-box">
+                                        <input type="file" name="images" accept="image/*" class="file-input">
+                                        <div class="upload-content">
+                                            <i class="fas fa-plus"></i>
+                                            <span>اختر صورة</span>
+                                        </div>
+                                    </div>
+                                    <div class="image-options">
+                                        <label class="main-image-checkbox">
+                                            <input type="checkbox" name="is_main_0">
+                                            <span class="checkmark"></span>
+                                            صورة رئيسية
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="luxury-btn luxury-btn-outline" onclick="addImageUpload()">
+                                <i class="fas fa-plus me-2"></i>
+                                إضافة صورة أخرى
+                            </button>
+                            
+                            <div class="upload-tips">
+                                <h6>نصائح للحصول على أفضل النتائج:</h6>
+                                <ul>
+                                    <li>استخدم صوراً بدقة عالية (1920x1080 أو أعلى)</li>
+                                    <li>التقط الصور في الإضاءة الطبيعية</li>
+                                    <li>أظهر جميع غرف العقار المهمة</li>
+                                    <li>اختر صورة رئيسية جذابة تمثل العقار</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Submit -->
+                    <div class="form-section">
+                        <div class="terms-section">
+                            <label class="terms-checkbox">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark"></span>
+                                <span class="terms-text">
+                                    أؤكد أن جميع المعلومات المدخلة صحيحة وأوافق على 
+                                    <a href="#" class="terms-link">الشروط والأحكام</a>
+                                    و<a href="#" class="terms-link">سياسة الخصوصية</a>
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="luxury-btn luxury-btn-primary luxury-btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                إرسال طلب العرض الفاخر
+                            </button>
+                            <a href="{% url 'properties:my_properties' %}" class="luxury-btn luxury-btn-outline luxury-btn-lg">
+                                <i class="fas fa-arrow-right me-2"></i>
+                                العودة لعقاراتي
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Luxury Info Alert */
+.luxury-info-alert {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+    border: 2px solid var(--luxury-gold-light);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.alert-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.alert-content h5 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.info-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.info-list li {
+    position: relative;
+    padding-right: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--luxury-gray);
+}
+
+.info-list li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    color: var(--luxury-gold);
+}
+
+/* Luxury Form Card */
+.luxury-form-card {
+    background: var(--luxury-white);
+    border-radius: 25px;
+    box-shadow: var(--luxury-shadow-heavy);
+    overflow: hidden;
+    border-top: 4px solid var(--luxury-gold);
+}
+
+.form-header {
+    background: linear-gradient(135deg, var(--luxury-pearl) 0%, var(--luxury-white) 100%);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.form-header h3 {
+    font-family: var(--luxury-font-secondary);
+    font-size: 2rem;
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    color: var(--luxury-gray);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Form Sections */
+.form-section {
+    padding: 3rem 2rem;
+    border-bottom: 1px solid var(--luxury-light-gray);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.section-header h4 {
+    font-family: var(--luxury-font-secondary);
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--luxury-gradient-gold);
+    margin: 1rem auto;
+    border-radius: 2px;
+}
+
+/* Form Controls */
+.luxury-property-form input.luxury-form-control,
+.luxury-property-form select.luxury-form-control,
+.luxury-property-form textarea.luxury-form-control {
+    border: 2px solid var(--luxury-light-gray);
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    background: var(--luxury-white);
+    transition: var(--luxury-transition);
+    width: 100%;
+}
+
+.luxury-property-form textarea.luxury-form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.luxury-property-form select.luxury-form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23D4AF37' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: left 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-left: 3rem;
+}
+
+.form-help {
+    margin-top: 0.5rem;
+}
+
+.form-help small {
+    color: var(--luxury-gray);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Image Upload Section */
+.image-upload-section {
+    background: var(--luxury-pearl);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.upload-info {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.upload-info i {
+    font-size: 3rem;
+    color: var(--luxury-gold);
+    margin-bottom: 1rem;
+}
+
+.upload-info h5 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.upload-info p {
+    color: var(--luxury-gray);
+    margin: 0;
+}
+
+#imageUploadContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.image-upload-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.upload-box {
+    position: relative;
+    border: 2px dashed var(--luxury-gold);
+    border-radius: 15px;
+    padding: 2rem 1rem;
+    text-align: center;
+    transition: var(--luxury-transition);
+    background: var(--luxury-white);
+    cursor: pointer;
+}
+
+.upload-box:hover {
+    border-color: var(--luxury-gold-dark);
+    background: var(--luxury-gold-light);
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-content i {
+    font-size: 2rem;
+    color: var(--luxury-gold);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.upload-content span {
+    color: var(--luxury-charcoal);
+    font-weight: 600;
+}
+
+.image-options {
+    text-align: center;
+}
+
+.main-image-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--luxury-charcoal);
+    font-size: 0.9rem;
+}
+
+.main-image-checkbox input {
+    display: none;
+}
+
+.main-image-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--luxury-gold);
+    border-radius: 4px;
+    position: relative;
+    transition: var(--luxury-transition);
+}
+
+.main-image-checkbox input:checked + .checkmark {
+    background: var(--luxury-gold);
+}
+
+.main-image-checkbox input:checked + .checkmark::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.7rem;
+}
+
+.upload-tips {
+    background: var(--luxury-white);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.upload-tips h6 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.upload-tips ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.upload-tips li {
+    position: relative;
+    padding-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--luxury-gray);
+    font-size: 0.9rem;
+}
+
+.upload-tips li::before {
+    content: '\f0eb';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    color: var(--luxury-gold);
+    font-size: 0.8rem;
+}
+
+/* Terms Section */
+.terms-section {
+    background: var(--luxury-pearl);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.terms-checkbox input {
+    display: none;
+}
+
+.terms-checkbox .checkmark {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--luxury-gold);
+    border-radius: 6px;
+    position: relative;
+    transition: var(--luxury-transition);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.terms-checkbox input:checked + .checkmark {
+    background: var(--luxury-gold);
+}
+
+.terms-checkbox input:checked + .checkmark::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.8rem;
+}
+
+.terms-text {
+    line-height: 1.6;
+    color: var(--luxury-charcoal);
+}
+
+.terms-link {
+    color: var(--luxury-gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--luxury-transition);
+}
+
+.terms-link:hover {
+    color: var(--luxury-gold-dark);
+    text-decoration: underline;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.luxury-btn-lg {
+    padding: 1.25rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .luxury-info-alert {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .form-header {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+    
+    .form-section {
+        padding: 2rem 1.5rem;
+    }
+    
+    #imageUploadContainer {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .luxury-btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let imageCount = 1;
+
+function addImageUpload() {
+    const container = document.getElementById('imageUploadContainer');
+    const newItem = document.createElement('div');
+    newItem.className = 'image-upload-item';
+    newItem.innerHTML = `
+        <div class="upload-box">
+            <input type="file" name="images" accept="image/*" class="file-input">
+            <div class="upload-content">
+                <i class="fas fa-plus"></i>
+                <span>اختر صورة</span>
+            </div>
+        </div>
+        <div class="image-options">
+            <label class="main-image-checkbox">
+                <input type="checkbox" name="is_main_${imageCount}">
+                <span class="checkmark"></span>
+                صورة رئيسية
+            </label>
+            <button type="button" class="luxury-btn luxury-btn-outline luxury-btn-sm mt-2" onclick="removeImageUpload(this)">
+                <i class="fas fa-times me-1"></i>
+                حذف
+            </button>
+        </div>
+    `;
+    container.appendChild(newItem);
+    imageCount++;
+    
+    // Add file preview functionality
+    const fileInput = newItem.querySelector('.file-input');
+    const uploadContent = newItem.querySelector('.upload-content');
+    
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadContent.innerHTML = `
+                    <img src="${e.target.result}" style="max-width: 100%; max-height: 100px; border-radius: 8px;">
+                    <span style="display: block; margin-top: 0.5rem; font-size: 0.8rem;">تم اختيار الصورة</span>
+                `;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+}
+
+function removeImageUpload(button) {
+    button.closest('.image-upload-item').remove();
+}
+
+// File preview for existing upload boxes
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.file-input').forEach(input => {
+        input.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                const uploadContent = this.parentElement.querySelector('.upload-content');
+                
+                reader.onload = function(e) {
+                    uploadContent.innerHTML = `
+                        <img src="${e.target.result}" style="max-width: 100%; max-height: 100px; border-radius: 8px;">
+                        <span style="display: block; margin-top: 0.5rem; font-size: 0.8rem;">تم اختيار الصورة</span>
+                    `;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    });
+    
+    // Form validation
+    const form = document.querySelector('.luxury-property-form');
+    form.addEventListener('submit', function(e) {
+        const termsCheckbox = document.getElementById('terms');
+        if (!termsCheckbox.checked) {
+            e.preventDefault();
+            showLuxuryNotification('يرجى الموافقة على الشروط والأحكام', 'error');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري الإرسال...';
+        submitBtn.disabled = true;
+        
+        // Re-enable after a delay (in case of validation errors)
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 3000);
+    });
+    
+    // Real-time validation
+    document.querySelectorAll('.luxury-form-control').forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.style.borderColor = 'var(--luxury-burgundy)';
+            } else {
+                this.style.borderColor = 'var(--luxury-light-gray)';
+            }
+        });
+        
+        input.addEventListener('focus', function() {
+            this.style.borderColor = 'var(--luxury-gold)';
+        });
+    });
+});
+</script>
+{% endblock %}

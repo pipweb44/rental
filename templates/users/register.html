@@ -1,0 +1,699 @@
+{% extends 'base.html' %}
+
+{% block title %}انضم إلينا - العقارات الفاخرة{% endblock %}
+
+{% block content %}
+<!-- Luxury Register Section -->
+<section class="luxury-auth-section">
+    <div class="auth-background"></div>
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-6 col-md-8">
+                <div class="luxury-auth-card" data-aos="zoom-in" data-aos-duration="800">
+                    <!-- Auth Header -->
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h2 class="auth-title">انضم إلى النخبة</h2>
+                        <p class="auth-subtitle">أنشئ حسابك للوصول إلى أرقى العقارات الفاخرة</p>
+                    </div>
+                    
+                    <!-- Auth Form -->
+                    <div class="auth-body">
+                        <form method="post" class="luxury-auth-form">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-user input-icon"></i>
+                                            {{ form.username }}
+                                            <label class="floating-label">اسم المستخدم</label>
+                                        </div>
+                                        {% if form.username.errors %}
+                                            <div class="error-message">
+                                                {% for error in form.username.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-envelope input-icon"></i>
+                                            {{ form.email }}
+                                            <label class="floating-label">البريد الإلكتروني</label>
+                                        </div>
+                                        {% if form.email.errors %}
+                                            <div class="error-message">
+                                                {% for error in form.email.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-users input-icon"></i>
+                                            {{ form.user_type }}
+                                            <label class="floating-label">نوع المستخدم</label>
+                                        </div>
+                                        {% if form.user_type.errors %}
+                                            <div class="error-message">
+                                                {% for error in form.user_type.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-help">
+                                            <small>اختر "عميل" للبحث عن عقارات، أو "مالك" لعرض عقاراتك</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-wrapper">
+                                            <i class="fas fa-phone input-icon"></i>
+                                            {{ form.phone }}
+                                            <label class="floating-label">رقم الهاتف</label>
+                                        </div>
+                                        {% if form.phone.errors %}
+                                            <div class="error-message">
+                                                {% for error in form.phone.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    {{ form.password1 }}
+                                    <button type="button" class="password-toggle" onclick="togglePassword('id_password1', 'passwordToggleIcon1')">
+                                        <i class="fas fa-eye" id="passwordToggleIcon1"></i>
+                                    </button>
+                                    <label class="floating-label">كلمة المرور</label>
+                                </div>
+                                {% if form.password1.errors %}
+                                    <div class="error-message">
+                                        {% for error in form.password1.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    {{ form.password2 }}
+                                    <button type="button" class="password-toggle" onclick="togglePassword('id_password2', 'passwordToggleIcon2')">
+                                        <i class="fas fa-eye" id="passwordToggleIcon2"></i>
+                                    </button>
+                                    <label class="floating-label">تأكيد كلمة المرور</label>
+                                </div>
+                                {% if form.password2.errors %}
+                                    <div class="error-message">
+                                        {% for error in form.password2.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Password Requirements -->
+                            <div class="password-requirements">
+                                <h6>متطلبات كلمة المرور:</h6>
+                                <ul class="requirements-list">
+                                    <li class="requirement" data-requirement="length">
+                                        <i class="fas fa-times"></i>
+                                        <span>8 أحرف على الأقل</span>
+                                    </li>
+                                    <li class="requirement" data-requirement="common">
+                                        <i class="fas fa-times"></i>
+                                        <span>ليست شائعة جداً</span>
+                                    </li>
+                                    <li class="requirement" data-requirement="personal">
+                                        <i class="fas fa-times"></i>
+                                        <span>ليست مشابهة لمعلوماتك الشخصية</span>
+                                    </li>
+                                    <li class="requirement" data-requirement="numeric">
+                                        <i class="fas fa-times"></i>
+                                        <span>ليست أرقام فقط</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="terms-agreement">
+                                    <input type="checkbox" id="terms" class="luxury-checkbox" required>
+                                    <label for="terms" class="checkbox-label">
+                                        <span class="checkmark"></span>
+                                        <span class="terms-text">
+                                            أوافق على 
+                                            <a href="#" class="terms-link">الشروط والأحكام</a> 
+                                            و<a href="#" class="terms-link">سياسة الخصوصية</a>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="luxury-btn luxury-btn-primary w-100 auth-submit">
+                                <span class="btn-text">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    إنشاء حساب فاخر
+                                </span>
+                                <div class="btn-loader">
+                                    <div class="spinner"></div>
+                                </div>
+                            </button>
+                        </form>
+                        
+                        <!-- Social Register -->
+                        <div class="social-login">
+                            <div class="divider">
+                                <span>أو انضم إلينا باستخدام</span>
+                            </div>
+                            <div class="social-buttons">
+                                <button class="social-btn google-btn">
+                                    <i class="fab fa-google"></i>
+                                    Google
+                                </button>
+                                <button class="social-btn apple-btn">
+                                    <i class="fab fa-apple"></i>
+                                    Apple
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Auth Footer -->
+                        <div class="auth-footer">
+                            <p>لديك حساب بالفعل؟ 
+                                <a href="{% url 'users:login' %}" class="auth-link">سجل دخولك</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Type Info Cards -->
+                <div class="user-type-info" data-aos="fade-up" data-aos-delay="400">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-card client-info">
+                                <div class="info-header">
+                                    <i class="fas fa-search"></i>
+                                    <h5>للعملاء المميزين</h5>
+                                </div>
+                                <ul class="info-features">
+                                    <li><i class="fas fa-check"></i>البحث في أرقى العقارات</li>
+                                    <li><i class="fas fa-check"></i>طلب إيجار مباشر</li>
+                                    <li><i class="fas fa-check"></i>متابعة الطلبات</li>
+                                    <li><i class="fas fa-check"></i>خدمة عملاء راقية</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card owner-info">
+                                <div class="info-header">
+                                    <i class="fas fa-building"></i>
+                                    <h5>لملاك العقارات الفاخرة</h5>
+                                </div>
+                                <ul class="info-features">
+                                    <li><i class="fas fa-check"></i>عرض عقاراتك الفاخرة</li>
+                                    <li><i class="fas fa-check"></i>إدارة متقدمة</li>
+                                    <li><i class="fas fa-check"></i>تقارير مفصلة</li>
+                                    <li><i class="fas fa-check"></i>دعم تسويقي</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Additional styles for register form */
+.form-help {
+    margin-top: 0.5rem;
+}
+
+.form-help small {
+    color: var(--luxury-gray);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.error-message {
+    margin-top: 0.5rem;
+    color: var(--luxury-burgundy);
+    font-size: 0.85rem;
+}
+
+.error-message small {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Password Requirements */
+.password-requirements {
+    background: var(--luxury-pearl);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--luxury-light-gray);
+}
+
+.password-requirements h6 {
+    color: var(--luxury-charcoal);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.requirements-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    transition: var(--luxury-transition);
+}
+
+.requirement i {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: var(--luxury-burgundy);
+    background: rgba(139, 0, 0, 0.1);
+}
+
+.requirement.valid i {
+    color: var(--luxury-emerald);
+    background: rgba(80, 200, 120, 0.1);
+}
+
+.requirement.valid {
+    color: var(--luxury-emerald);
+}
+
+/* Terms Agreement */
+.terms-agreement {
+    background: var(--luxury-pearl);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--luxury-light-gray);
+}
+
+.terms-text {
+    line-height: 1.6;
+    color: var(--luxury-charcoal);
+}
+
+.terms-link {
+    color: var(--luxury-gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--luxury-transition);
+}
+
+.terms-link:hover {
+    color: var(--luxury-gold-dark);
+    text-decoration: underline;
+}
+
+/* User Type Info Cards */
+.user-type-info {
+    margin-top: 2rem;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    transition: var(--luxury-transition);
+    height: 100%;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.client-info {
+    border-color: rgba(79, 172, 254, 0.3);
+}
+
+.owner-info {
+    border-color: rgba(80, 200, 120, 0.3);
+}
+
+.info-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.info-header i {
+    width: 60px;
+    height: 60px;
+    background: var(--luxury-gradient-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: var(--luxury-shadow-gold);
+}
+
+.client-info .info-header i {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.owner-info .info-header i {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.info-header h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.info-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.info-features li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.info-features li:last-child {
+    margin-bottom: 0;
+}
+
+.info-features i {
+    color: var(--luxury-gold);
+    font-size: 0.9rem;
+    width: 16px;
+}
+
+/* Form Field Styling */
+.luxury-auth-form select.luxury-form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23D4AF37' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: left 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-left: 3rem;
+}
+
+.luxury-auth-form input.luxury-form-control,
+.luxury-auth-form select.luxury-form-control {
+    border: 2px solid var(--luxury-light-gray);
+    border-radius: 15px;
+    padding: 1.25rem 3rem 1.25rem 1rem;
+    font-size: 1rem;
+    background: var(--luxury-white);
+    transition: var(--luxury-transition);
+    width: 100%;
+}
+
+.luxury-auth-form input.luxury-form-control:focus,
+.luxury-auth-form select.luxury-form-control:focus {
+    border-color: var(--luxury-gold);
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+    outline: none;
+}
+
+/* Error State */
+.luxury-auth-form input.luxury-form-control.error,
+.luxury-auth-form select.luxury-form-control.error {
+    border-color: var(--luxury-burgundy);
+    box-shadow: 0 0 0 0.2rem rgba(139, 0, 0, 0.25);
+}
+
+/* Success State */
+.luxury-auth-form input.luxury-form-control.success,
+.luxury-auth-form select.luxury-form-control.success {
+    border-color: var(--luxury-emerald);
+    box-shadow: 0 0 0 0.2rem rgba(80, 200, 120, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .password-requirements {
+        padding: 1rem;
+    }
+    
+    .requirements-list {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .info-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .info-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .info-header i {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .terms-agreement {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password Toggle Functions
+function togglePassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fas fa-eye';
+    }
+}
+
+// Password Requirements Validation
+function validatePassword() {
+    const password = document.getElementById('id_password1').value;
+    const requirements = document.querySelectorAll('.requirement');
+    
+    // Length check
+    const lengthReq = document.querySelector('[data-requirement="length"]');
+    if (password.length >= 8) {
+        lengthReq.classList.add('valid');
+        lengthReq.querySelector('i').className = 'fas fa-check';
+    } else {
+        lengthReq.classList.remove('valid');
+        lengthReq.querySelector('i').className = 'fas fa-times';
+    }
+    
+    // Common password check (simplified)
+    const commonReq = document.querySelector('[data-requirement="common"]');
+    const commonPasswords = ['password', '123456', 'qwerty', 'abc123'];
+    if (!commonPasswords.some(common => password.toLowerCase().includes(common))) {
+        commonReq.classList.add('valid');
+        commonReq.querySelector('i').className = 'fas fa-check';
+    } else {
+        commonReq.classList.remove('valid');
+        commonReq.querySelector('i').className = 'fas fa-times';
+    }
+    
+    // Personal info check (simplified)
+    const personalReq = document.querySelector('[data-requirement="personal"]');
+    const username = document.getElementById('id_username').value.toLowerCase();
+    const email = document.getElementById('id_email').value.toLowerCase();
+    if (!password.toLowerCase().includes(username) && !password.toLowerCase().includes(email.split('@')[0])) {
+        personalReq.classList.add('valid');
+        personalReq.querySelector('i').className = 'fas fa-check';
+    } else {
+        personalReq.classList.remove('valid');
+        personalReq.querySelector('i').className = 'fas fa-times';
+    }
+    
+    // Numeric only check
+    const numericReq = document.querySelector('[data-requirement="numeric"]');
+    if (!/^\d+$/.test(password)) {
+        numericReq.classList.add('valid');
+        numericReq.querySelector('i').className = 'fas fa-check';
+    } else {
+        numericReq.classList.remove('valid');
+        numericReq.querySelector('i').className = 'fas fa-times';
+    }
+}
+
+// Form Validation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.luxury-auth-form');
+    const passwordInput = document.getElementById('id_password1');
+    const usernameInput = document.getElementById('id_username');
+    const emailInput = document.getElementById('id_email');
+    
+    // Password validation on input
+    if (passwordInput) {
+        passwordInput.addEventListener('input', validatePassword);
+        usernameInput.addEventListener('input', validatePassword);
+        emailInput.addEventListener('input', validatePassword);
+    }
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        const submitBtn = document.querySelector('.auth-submit');
+        const termsCheckbox = document.getElementById('terms');
+        
+        if (!termsCheckbox.checked) {
+            e.preventDefault();
+            showLuxuryNotification('يرجى الموافقة على الشروط والأحكام', 'error');
+            return;
+        }
+        
+        submitBtn.classList.add('loading');
+        
+        // Remove loading state after form submission
+        setTimeout(() => {
+            submitBtn.classList.remove('loading');
+        }, 2000);
+    });
+    
+    // Floating labels
+    document.querySelectorAll('.luxury-form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+        }
+    });
+    
+    // Real-time validation
+    document.querySelectorAll('input[type="email"]').forEach(input => {
+        input.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !emailRegex.test(this.value)) {
+                this.classList.add('error');
+                this.classList.remove('success');
+            } else if (this.value) {
+                this.classList.add('success');
+                this.classList.remove('error');
+            }
+        });
+    });
+    
+    // Phone number formatting
+    const phoneInput = document.getElementById('id_phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.startsWith('966')) {
+                    value = '+' + value;
+                } else if (value.startsWith('05')) {
+                    value = '+966' + value.substring(1);
+                } else if (value.startsWith('5')) {
+                    value = '+9665' + value.substring(1);
+                }
+            }
+            this.value = value;
+        });
+    }
+});
+
+// Social Registration
+document.querySelectorAll('.social-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const provider = this.classList.contains('google-btn') ? 'Google' : 'Apple';
+        showLuxuryNotification(`جاري التسجيل باستخدام ${provider}...`, 'info');
+    });
+});
+
+// User type selection guidance
+document.getElementById('id_user_type').addEventListener('change', function() {
+    const value = this.value;
+    const clientCard = document.querySelector('.client-info');
+    const ownerCard = document.querySelector('.owner-info');
+    
+    // Reset highlights
+    clientCard.style.transform = 'scale(1)';
+    ownerCard.style.transform = 'scale(1)';
+    
+    // Highlight selected type
+    if (value === 'client') {
+        clientCard.style.transform = 'scale(1.05)';
+        clientCard.style.boxShadow = 'var(--luxury-shadow-gold)';
+        setTimeout(() => {
+            clientCard.style.transform = 'scale(1)';
+            clientCard.style.boxShadow = '';
+        }, 1000);
+    } else if (value === 'owner') {
+        ownerCard.style.transform = 'scale(1.05)';
+        ownerCard.style.boxShadow = 'var(--luxury-shadow-gold)';
+        setTimeout(() => {
+            ownerCard.style.transform = 'scale(1)';
+            ownerCard.style.boxShadow = '';
+        }, 1000);
+    }
+});
+</script>
+{% endblock %}
