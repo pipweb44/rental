@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}طلبات عرض العقارات - لوحة الإدارة{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">
+                    <i class="fas fa-home me-2"></i>
+                    طلبات عرض العقارات
+                </h2>
+                <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    العودة للوحة الإدارة
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <ul class="nav nav-pills" id="statusTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">
+                        جميع الطلبات
+                        <span class="badge bg-secondary ms-2">{{ requests.count }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pending-tab" data-bs-toggle="pill" data-bs-target="#pending" type="button" role="tab">
+                        في الانتظار
+                        <span class="badge bg-warning ms-2">{{ requests|length }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="approved-tab" data-bs-toggle="pill" data-bs-target="#approved" type="button" role="tab">
+                        مقبولة
+                        <span class="badge bg-success ms-2">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="rejected-tab" data-bs-toggle="pill" data-bs-target="#rejected" type="button" role="tab">
+                        مرفوضة
+                        <span class="badge bg-danger ms-2">0</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Requests Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>العقار</th>
+                                        <th>المالك</th>
+                                        <th>النوع</th>
+                                        <th>المدينة</th>
+                                        <th>السعر</th>
+                                        <th>الحالة</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in requests %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if request.images.first %}
+                                                        <img src="{{ request.images.first.image.url }}" 
+                                                             class="rounded me-3" width="50" height="50" alt="{{ request.title }}">
+                                                    {% else %}
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" 
+                                                             style="width: 50px; height: 50px;">
+                                                            <i class="fas fa-image text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <h6 class="mb-0">{{ request.title }}</h6>
+                                                        <small class="text-muted">{{ request.description|truncatewords:5 }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>{{ request.owner.get_full_name|default:request.owner.username }}</strong><br>
+                                                    <small class="text-muted">{{ request.owner.email }}</small>
+                                                </div>
+                                            </td>
+                                            <td>{{ request.get_property_type_display }}</td>
+                                            <td>{{ request.city }}</td>
+                                            <td>{{ request.price }} ريال</td>
+                                            <td>
+                                                {% if request.status == 'pending' %}
+                                                    <span class="badge status-pending">في الانتظار</span>
+                                                {% elif request.status == 'approved' %}
+                                                    <span class="badge status-approved">مقبول</span>
+                                                {% else %}
+                                                    <span class="badge status-rejected">مرفوض</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ request.created_at|date:"d/m/Y" }}</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button class="btn btn-sm btn-outline-info" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#requestModal{{ request.id }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    {% if request.status == 'pending' %}
+                                                        <a href="{% url 'admin_panel:approve_property_request' request.id %}" 
+                                                           class="btn btn-sm btn-success"
+                                                           onclick="return confirm('هل أنت متأكد من قبول هذا الطلب؟')">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                        <a href="{% url 'admin_panel:reject_property_request' request.id %}" 
+                                                           class="btn btn-sm btn-danger"
+                                                           onclick="return confirm('هل أنت متأكد من رفض هذا الطلب؟')">
+                                                            <i class="fas fa-times"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Request Details Modal -->
+                                        <div class="modal fade" id="requestModal{{ request.id }}" tabindex="-1">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">تفاصيل طلب العقار</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <h6>معلومات العقار:</h6>
+                                                                <p><strong>العنوان:</strong> {{ request.title }}</p>
+                                                                <p><strong>النوع:</strong> {{ request.get_property_type_display }}</p>
+                                                                <p><strong>المدينة:</strong> {{ request.city }}</p>
+                                                                <p><strong>المساحة:</strong> {{ request.area }} م²</p>
+                                                                <p><strong>غرف النوم:</strong> {{ request.bedrooms }}</p>
+                                                                <p><strong>دورات المياه:</strong> {{ request.bathrooms }}</p>
+                                                                <p><strong>السعر:</strong> {{ request.price }} ريال/شهر</p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>معلومات المالك:</h6>
+                                                                <p><strong>الاسم:</strong> {{ request.owner.get_full_name|default:request.owner.username }}</p>
+                                                                <p><strong>البريد:</strong> {{ request.owner.email }}</p>
+                                                                {% if request.owner.phone %}
+                                                                    <p><strong>الهاتف:</strong> {{ request.owner.phone }}</p>
+                                                                {% endif %}
+                                                                <p><strong>تاريخ التسجيل:</strong> {{ request.owner.date_joined|date:"d/m/Y" }}</p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <hr>
+                                                        
+                                                        <h6>الوصف:</h6>
+                                                        <p>{{ request.description }}</p>
+                                                        
+                                                        <h6>العنوان التفصيلي:</h6>
+                                                        <p>{{ request.address }}</p>
+                                                        
+                                                        {% if request.images.all %}
+                                                            <h6>الصور:</h6>
+                                                            <div class="row">
+                                                                {% for image in request.images.all %}
+                                                                    <div class="col-md-4 mb-2">
+                                                                        <img src="{{ image.image.url }}" 
+                                                                             class="img-fluid rounded" alt="صورة العقار">
+                                                                        {% if image.is_main %}
+                                                                            <small class="text-primary">صورة رئيسية</small>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                        
+                                                        {% if request.admin_notes %}
+                                                            <hr>
+                                                            <h6>ملاحظات الإدارة:</h6>
+                                                            <p class="text-muted">{{ request.admin_notes }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        {% if request.status == 'pending' %}
+                                                            <a href="{% url 'admin_panel:approve_property_request' request.id %}" 
+                                                               class="btn btn-success"
+                                                               onclick="return confirm('هل أنت متأكد من قبول هذا الطلب؟')">
+                                                                <i class="fas fa-check me-2"></i>
+                                                                قبول الطلب
+                                                            </a>
+                                                            <a href="{% url 'admin_panel:reject_property_request' request.id %}" 
+                                                               class="btn btn-danger"
+                                                               onclick="return confirm('هل أنت متأكد من رفض هذا الطلب؟')">
+                                                                <i class="fas fa-times me-2"></i>
+                                                                رفض الطلب
+                                                            </a>
+                                                        {% endif %}
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            إغلاق
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">لا توجد طلبات عرض عقارات</h5>
+                            <p class="text-muted">لم يتم إرسال أي طلبات لعرض العقارات بعد</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add fade-in animation
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
+            
+            setTimeout(() => {
+                row.style.transition = 'all 0.4s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateX(0)';
+            }, index * 50);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+
+{% block title %}طلب عرض عقار - موقع إيجار العقارات{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus me-2"></i>
+                        طلب عرض عقار جديد
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6 class="fw-bold">
+                            <i class="fas fa-info-circle me-2"></i>
+                            معلومات مهمة:
+                        </h6>
+                        <ul class="mb-0">
+                            <li>سيتم مراجعة طلبك من قبل فريق الإدارة</li>
+                            <li>عند الموافقة على الطلب، سيتم إنشاء العقار وعرضه في الموقع</li>
+                            <li>تأكد من إدخال جميع المعلومات بدقة</li>
+                            <li>يمكنك إضافة صور للعقار لزيادة فرص الموافقة</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Basic Information -->
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h5 class="fw-bold text-primary">المعلومات الأساسية</h5>
+                                <hr>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    عنوان العقار *
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.title.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.property_type.id_for_label }}" class="form-label">
+                                    نوع العقار *
+                                </label>
+                                {{ form.property_type }}
+                                {% if form.property_type.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.property_type.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">
+                                    وصف العقار *
+                                </label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.description.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Location Information -->
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h5 class="fw-bold text-primary">معلومات الموقع</h5>
+                                <hr>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.city.id_for_label }}" class="form-label">
+                                    المدينة *
+                                </label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.city.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.area.id_for_label }}" class="form-label">
+                                    المساحة (متر مربع) *
+                                </label>
+                                {{ form.area }}
+                                {% if form.area.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.area.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">
+                                    العنوان التفصيلي *
+                                </label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.address.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Property Details -->
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h5 class="fw-bold text-primary">تفاصيل العقار</h5>
+                                <hr>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.bedrooms.id_for_label }}" class="form-label">
+                                    عدد غرف النوم
+                                </label>
+                                {{ form.bedrooms }}
+                                {% if form.bedrooms.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.bedrooms.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.bathrooms.id_for_label }}" class="form-label">
+                                    عدد دورات المياه
+                                </label>
+                                {{ form.bathrooms }}
+                                {% if form.bathrooms.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.bathrooms.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.price.id_for_label }}" class="form-label">
+                                    السعر الشهري (ريال) *
+                                </label>
+                                {{ form.price }}
+                                {% if form.price.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.price.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Images Section -->
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h5 class="fw-bold text-primary">صور العقار</h5>
+                                <hr>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label class="form-label">إضافة صور العقار</label>
+                                <div id="image-upload-container">
+                                    <div class="image-upload-item mb-3">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="file" class="form-control" name="images" accept="image/*">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_main_0">
+                                                    <label class="form-check-label">صورة رئيسية</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addImageUpload()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    إضافة صورة أخرى
+                                </button>
+                                <div class="form-text">
+                                    يمكنك إضافة عدة صور للعقار. اختر صورة واحدة كصورة رئيسية.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms and Submit -->
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                أؤكد أن جميع المعلومات المدخلة صحيحة وأوافق على 
+                                <a href="#" class="text-primary">الشروط والأحكام</a>
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-success btn-lg flex-fill">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                إرسال طلب العرض
+                            </button>
+                            <a href="{% url 'properties:my_requests' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-right me-2"></i>
+                                العودة
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let imageCount = 1;
+    
+    function addImageUpload() {
+        const container = document.getElementById('image-upload-container');
+        const newItem = document.createElement('div');
+        newItem.className = 'image-upload-item mb-3';
+        newItem.innerHTML = `
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="file" class="form-control" name="images" accept="image/*">
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_main_${imageCount}">
+                        <label class="form-check-label">صورة رئيسية</label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeImageUpload(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newItem);
+        imageCount++;
+    }
+    
+    function removeImageUpload(button) {
+        button.closest('.image-upload-item').remove();
+    }
+    
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+    
+    // Add fade-in animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const card = document.querySelector('.card');
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100);
+    });
+</script>
+{% endblock %}
